@@ -1,45 +1,66 @@
-# Preparación obligatoria antes de la sesión 9
+# Preparación obligatoria antes de la sesión 9 - REESTRUCTURADA
 
-Esta actividad no consume tiempo del encuentro del 14 de octubre. Debe quedar completada por docentes y estudiantes antes de las 6:00 p. m. de ese día.
+**Sesión 9: Entorno reproducible, Git colaborativo y contenedores**
+**Fecha:** Miércoles 14 de octubre de 2026, 6:00–10:00 p. m.
+
+Esta actividad debe completarse por docentes y estudiantes antes de las 6:00 p. m. del 14 de octubre.
+
+## Cambios principales para esta sesión
+
+La sesión 9 se ha reestructurado para abordar temas pendientes identificados:
+1. **Git colaborativo** - Uso práctico de fork, ramas y PRs
+2. **Contenedores básicos** - Docker/Podman para entornos reproducibles
+3. **Infraestructura flexible** - AWS Learner Lab O Cloud Privado O entorno local
 
 ## Preparación institucional y docente
 
-El responsable de la clase debe verificar:
+### Opciones de infraestructura (seleccionar una):
+1. **AWS Learner Lab** (preferido si disponible):
+   - Verificar membresía activa de la institución en AWS Academy
+   - Clase de Learner Lab creada para Informática I, segundo semestre 2026
+   - Estudiantes invitados con correo institucional
+   - Región común configurada
 
-- membresía activa de la institución en AWS Academy;
-- acceso docente y finalización del proceso de incorporación requerido por AWS Academy;
-- clase de Learner Lab creada para Informática I, segundo semestre de 2026;
-- estudiantes invitados con el correo institucional y capacidad de iniciar el laboratorio;
-- región común, presupuesto/crédito, duración de la sesión y fecha de cierre;
-- disponibilidad real de CloudFormation, S3, DynamoDB, SQS, Lambda, API Gateway, CloudWatch y, solo si se usará, ECR;
-- rol de ejecución disponible para Lambda y su ARN, sin crear roles adicionales;
-- acceso a CloudShell o, como alternativa, uso de la consola y AWS CLI local con credenciales temporales;
-- una cuenta de prueba con la misma experiencia y permisos que un estudiante.
+2. **Cloud Privado Universitario** (alternativa institucional):
+   - Configurar acceso para todos los estudiantes
+   - Proporcionar credenciales o mecanismo de acceso
+   - Verificar cuotas y servicios disponibles
 
-Si Lambda, API Gateway o el rol de laboratorio no están habilitados, la sesión 13 usa FastAPI local y los servicios habilitados solo como comparación. Si ECR no está disponible, la sesión 14 termina en el registro local de Podman y `kind`.
+3. **Entorno local completo** (contingencia):
+   - Preparar materiales para simulación local
+   - Verificar que todos pueden ejecutar contenedores localmente
 
-## Prueba docente de humo
+### Verificaciones técnicas comunes:
+- Acceso a Git y GitHub funcionando
+- Docker o Podman disponibles
+- Python 3.x instalado
+- Memoria suficiente (mínimo 8 GB RAM recomendado)
 
-Con una sesión de prueba de Learner Lab iniciada:
+## Prueba docente de configuración completa
 
 ```bash
+# 1. Verificar entorno general
+./scripts/check_sesion9_prep.sh
+
+# 2. Verificar Git específicamente
+./scripts/check_git_setup.sh
+
+# 3. Verificar contenedores
+./scripts/check_container_tools.sh
+
+# 4. Si usando AWS Learner Lab:
 export AWS_REGION=REGION_ACORDADA
 ./aws-learner-lab/scripts/check_preparation.sh
 
+# 5. Probar despliegue AWS (opcional)
 ./aws-learner-lab/scripts/stack.sh deploy \
   libre-reserva-s09-docente \
   aws-learner-lab/templates/s09-foundation.yaml --apply
 
-aws cloudformation describe-stacks \
-  --stack-name libre-reserva-s09-docente \
-  --region "$AWS_REGION" \
-  --query 'Stacks[0].Outputs' --output table
-
+# 6. Limpiar prueba AWS
 ./aws-learner-lab/scripts/stack.sh delete \
   libre-reserva-s09-docente --apply
 ```
-
-El docente repite la validación de la plantilla de cada semana antes de publicar la práctica. No basta con que el servicio aparezca en la consola: el rol estudiantil debe poder desplegarlo y eliminarlo.
 
 ## Preparación del estudiante
 

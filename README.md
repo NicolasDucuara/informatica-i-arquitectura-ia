@@ -51,7 +51,7 @@ El miércoles 7 de octubre corresponde a la Semana Universitaria y no se program
 
 | Semana | Fecha | Profesor | Tema y práctica asociada |
 |---:|---|---|---|
-| 9 | 14 oct. | Esteban Hernández | Entorno reproducible: preparación y verificación de la estación de trabajo |
+| 9 | 14 oct. | Esteban Hernández | Entorno reproducible, Git colaborativo y contenedores: preparación y verificación de la estación de trabajo |
 | 10 | 21 oct. | Esteban Hernández · virtual | Atributos de calidad: escenarios medibles y funciones de aptitud |
 | 11 | 28 oct. | Esteban Hernández | Atributos de calidad aplicados a modularidad, dominio y núcleo hexagonal |
 | 12 | 4 nov. | Esteban Hernández | Sistemas distribuidos: decidir antes de distribuir |
@@ -74,7 +74,7 @@ La descripción institucional completa se encuentra en la [agenda del segundo se
 | 6 | [Lenguajes modernos orientados a objetos: Java](modules/01_Lenguajes_Modernos/README.md) | Java POO |
 | 7 | [Lenguajes modernos orientados a objetos: Java](modules/01_Lenguajes_Modernos/README.md) | Java POO |
 | 8 | [Metapatrón MVC y manejo de comunicaciones](modules/01_Lenguajes_Modernos/README.md) | Aplicacion Web con Python-FastApi y java-SpringBoots |
-| 9 | [Entorno reproducible](modules/01_entorno/README.md) | Estación verificada y registro del entorno | Git, Python, Make, Podman |
+| 9 | [Entorno reproducible](modules/01_entorno/README.md) + [Git colaborativo](modules/00_git_colaborativo/README.md) | Estación verificada, flujo Git colaborativo y contenedores básicos | Git, Python, Make, Docker/Podman |
 | 10 | [Atributos de calidad](modules/02_calidad/README.md) | Escenarios con unidad, umbral y condiciones | Jupyter, Python |
 | 11 | [Atributos de calidad](modules/02_calidad/README.md) y [modularidad y dominio](modules/04_modularidad/README.md) | Función de aptitud, límites y núcleo hexagonal | Python, FastAPI |
 | 12 | [Sistemas distribuidos](modules/05_distribucion/README.md) | Matriz de decisión y experimento de fallo | Podman |
@@ -131,6 +131,41 @@ make run
 ```
 
 La API quedará en `http://127.0.0.1:8000` y su contrato interactivo en `http://127.0.0.1:8000/docs`.
+
+## Guía de Git y GitHub para trabajo colaborativo
+
+Para el trabajo en equipo y el flujo de desarrollo colaborativo, se recomienda seguir la guía completa:
+
+### 📚 [Guía de Git y GitHub: Flujo de trabajo colaborativo](https://github.com/eshernan/big-data-postgraduate/blob/main/docs/guia-git/README.md)
+
+Esta guía detallada cubre todos los escenarios de trabajo con Git y GitHub:
+
+**Escenarios cubiertos:**
+- **E1**: Preparación del entorno (fork, clonación, configuración de remotos)
+- **E2**: Trabajo individual (commits, push, Pull Requests)
+- **E3**: Actualizaciones del profesor (sincronización con repositorio original)
+- **E4**: Trabajo sincronizado en equipo
+- **E5**: Manejo de push rechazado
+- **E6**: Resolución de conflictos
+
+**Comandos esenciales para la sesión 9:**
+```bash
+# Configurar remotos después de crear fork
+git remote rename origin upstream
+git remote add origin URL_DEL_TU_FORK
+git remote -v
+
+# Trabajar en ramas de características
+git checkout -b sesion9-equipoXX
+git add .
+git commit -m "Descripción clara del cambio"
+git push -u origin sesion9-equipoXX
+```
+
+**Scripts de apoyo recién agregados:**
+- `./scripts/check_git_setup.sh` - Verifica configuración Git
+- `./scripts/check_sesion9_prep.sh` - Verificación completa para sesión 9
+- `./scripts/check_container_tools.sh` - Verifica Docker/Podman
 
 ### Sistemas compatibles
 
