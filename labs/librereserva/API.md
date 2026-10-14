@@ -173,6 +173,7 @@ El [Containerfile](Containerfile) empaqueta la misma API con Uvicorn y escucha e
 
 ```bash
 # Docker
+# Ubuntu: instalar primero con ./scripts/install_docker_ubuntu.sh --apply
 docker build -f labs/librereserva/Containerfile -t localhost/librereserva:0.1.0 labs/librereserva
 docker run --rm -p 127.0.0.1:8000:8000 localhost/librereserva:0.1.0
 ```

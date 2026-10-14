@@ -49,6 +49,55 @@ Para otras distribuciones, siga la [instalación oficial de Podman](https://podm
 
 Elija Docker o Podman para la práctica. `install_base.sh` instala Podman, no Docker. Si elige Docker Engine, siga la instalación oficial de su distribución: [Ubuntu](https://docs.docker.com/engine/install/ubuntu/) o [Debian](https://docs.docker.com/engine/install/debian/).
 
+#### Instalación con script en Ubuntu y EC2
+
+Para Ubuntu 22.04, 24.04 y **26.04 LTS (Resolute)**, desde la raíz del repositorio:
+
+```bash
+cat /etc/os-release
+sed -n '1,240p' scripts/install_docker_ubuntu.sh
+./scripts/install_docker_ubuntu.sh          # muestra el plan sin instalar
+./scripts/install_docker_ubuntu.sh --apply  # instala y verifica Docker
+```
+
+El script detecta la versión y arquitectura, configura el repositorio oficial e instala Docker Engine, Buildx y Compose. Requiere acceso a Internet y permisos sudo; detiene la instalación si encuentra paquetes incompatibles, sin eliminarlos automáticamente. En EC2 use estos pasos dentro de la sesión SSH de la instancia Ubuntu. Amazon Linux y Debian no son compatibles con este script.
+
+Docker no instala las herramientas Python del curso. Si aún no están disponibles:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y git make python3 python3-venv python3-pip curl
+./scripts/setup_python.sh --apply
+make test
+```
+
+Después construya y ejecute la API desde la raíz del repositorio:
+
+```bash
+sudo docker build -f labs/librereserva/Containerfile -t localhost/librereserva:0.1.0 labs/librereserva
+sudo docker run --rm -p 127.0.0.1:8000:8000 localhost/librereserva:0.1.0
+```
+
+En otra terminal SSH, compruebe `curl -fsS http://127.0.0.1:8000/salud/viva`. Para abrir la API en el navegador de su computador, cree un túnel desde ese computador con `ssh -i /ruta/clave.pem -L 8000:127.0.0.1:8000 ubuntu@HOST_EC2` y visite `http://127.0.0.1:8000/docs`. Sustituya la clave y el host por los de su instancia; el túnel usa el acceso SSH existente.
+
+#### Diagnóstico de paquetes
+
+En una instancia EC2, identifique primero la distribución de la imagen; EC2 no implica que el sistema sea Ubuntu:
+
+```bash
+cat /etc/os-release
+```
+
+Si `apt` muestra `Package 'docker' has no installation candidate`, no use `sudo apt install docker` para instalar Docker Engine. La ruta oficial para Ubuntu/Debian requiere configurar primero el repositorio de Docker correspondiente a esa distribución y luego instalar estos paquetes:
+
+```bash
+# Solo después de configurar el repositorio oficial de su distribución
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+Compruebe que `apt-get update` finalice correctamente. Si `docker-ce` tampoco tiene candidato, revise la configuración del repositorio y la versión soportada en la guía oficial. Amazon Linux usa otra ruta de instalación; no aplique los pasos `apt` de Ubuntu/Debian a esa imagen.
+
 En sistemas con systemd, compruebe el servicio y ejecute el contenedor de prueba:
 
 ```bash
