@@ -3,6 +3,12 @@
 **Fecha:** 11 de noviembre de 2026, 6:00–10:00 p. m.
 **Resultado:** desplegar un corte vertical serverless de LibreReserva, observar su consistencia y reconocer qué garantías todavía faltan.
 
+## Dos rutas para el mismo resultado
+
+Seleccione una antes de clase. La ruta local sigue la [etapa de persistencia y transacciones](../../../modules/06_apis_datos_eventos/LABORATORIO.md#sesión-13-persistencia-y-transacciones): volumen, restricción SQL y reserva/outbox en una transacción. La ruta AWS usa el corte vertical de esta guía. No se pide completar ambas ni portar la API base a dos arquitecturas durante cuatro horas.
+
+El mínimo es comprobar persistencia y explicar una falla de doble escritura. Integrar el adaptador PostgreSQL se realiza por incrementos; publicador AMQP y consumidor idempotente son ampliaciones del proyecto. No se presenta el Compose ni la tabla outbox como una integración de la API ya terminada.
+
 ## Montaje docente en AWS Academy
 
 Publique `S13 — LibreReserva — API, datos y eventos` con este archivo, `s13-serverless-api.yaml`, el módulo 6 y la evidencia. En el anuncio entregue el **ARN del rol de Lambda ya habilitado por Learner Lab**, nunca credenciales. Pruebe que ese rol pueda escribir DynamoDB/SQS y logs. Si el rol o cualquier servicio está restringido, publique la ruta FastAPI/PostgreSQL/RabbitMQ como principal.
@@ -12,10 +18,10 @@ Publique `S13 — LibreReserva — API, datos y eventos` con este archivo, `s13-
 | Hora | Tema y acción |
 |---|---|
 | 6:00–6:20 | contrato y garantías acumuladas |
-| 6:20–7:10 | API Gateway, Lambda, DynamoDB, eventos, idempotencia y outbox |
-| 7:10–7:50 | demo del corte vertical y trazado de una solicitud |
-| 8:00–9:25 | taller: POST/GET, duplicado, cola, logs y prueba concurrente |
-| 9:25–9:50 | brecha entre ejemplo y sistema correcto; propuesta de outbox |
+| 6:20–7:10 | memoria frente a persistencia, transacción y doble escritura |
+| 7:10–7:50 | demo de la ruta elegida: PostgreSQL local o corte vertical AWS |
+| 8:00–9:25 | guardar/consultar, reiniciar y comprobar datos; observar un duplicado o un conflicto |
+| 9:25–9:50 | análisis del fallo y siguiente incremento de integración |
 | 9:50–10:00 | eliminación de pila |
 
 ## Despliegue
@@ -57,6 +63,6 @@ aws cloudformation describe-stack-resources \
 ./aws-learner-lab/scripts/stack.sh delete libre-reserva-s13-equipoXX --apply
 ```
 
-**Evidencia:** contrato probado, 201/409, ítem, mensaje, logs, análisis de doble escritura, diseño de outbox y limpieza.
+**Evidencia:** resultados de la ruta elegida, persistencia, duplicado/conflicto, análisis de doble escritura y limpieza. En la ruta SQL local, las escrituras no son solicitudes HTTP: la conexión de la API se declara como incremento pendiente. No se evalúa una solución completa de outbox si todavía no se ha implementado.
 
-**Ruta local:** FastAPI, PostgreSQL y RabbitMQ mediante `modules/06_apis_datos_eventos/`; es la contingencia oficial.
+**Ruta local:** [laboratorio por etapas](../../../modules/06_apis_datos_eventos/LABORATORIO.md), con SQL de demostración y criterios para integrar FastAPI. Es la alternativa sin nube, no una aplicación equivalente ya integrada.

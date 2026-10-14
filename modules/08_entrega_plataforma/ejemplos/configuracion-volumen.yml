@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: entorno-demo
+  namespace: entorno-demo
+data:
+  AMBIENTE: laboratorio
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: datos-demo
+  namespace: entorno-demo
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 64Mi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: entorno-demo
+  namespace: entorno-demo
+spec:
+  securityContext:
+    runAsUser: 10001
+    runAsGroup: 10001
+    fsGroup: 10001
+  containers:
+    - name: demo
+      image: docker.io/library/busybox:1.37
+      command:
+        - sh
+        - -c
+        - 'test -e /datos/registro.txt || date > /datos/registro.txt; sleep 3600'
+      envFrom:
+        - configMapRef:
+            name: entorno-demo
+        - secretRef:
+            name: credencial-demo
+      resources:
+        requests: {cpu: 10m, memory: 16Mi}
+        limits: {cpu: 100m, memory: 32Mi}
+      volumeMounts:
+        - name: datos
+          mountPath: /datos
+  volumes:
+    - name: datos
+      persistentVolumeClaim:
+        claimName: datos-demo

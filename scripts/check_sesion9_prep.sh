@@ -201,8 +201,8 @@ echo
 echo "🎯 OBJETIVOS DE LA SESIÓN:"
 echo "  1. Git colaborativo: Fork, ramas, PRs"
 echo "  2. Contenedores básicos: Imágenes, ejecución"
-echo "  3. Infraestructura: AWS Learner Lab o alternativa"
-echo "  4. Integración: Evidencia combinada"
+echo "  3. LibreReserva: .venv, imagen, API y reinicio"
+echo "  4. Evidencia en PR; AWS es opcional y Compose/Kubernetes vienen después"
 
 echo
 echo "📚 RECURSOS:"

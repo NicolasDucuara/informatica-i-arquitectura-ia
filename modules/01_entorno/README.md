@@ -4,6 +4,14 @@
 
 Preparar una estación verificable, explicar qué es una decisión arquitectónica y registrar la primera evidencia reproducible.
 
+La [práctica breve de sesión 9](PRACTICA_CONTENEDORES.md) compara `.venv` y contenedor, explica la elección Docker/Podman y recorre el ciclo de vida de LibreReserva. La [ruta por sesiones](../../docs/RUTA_CONTENEDORES.md) distribuye Compose, datos, Kubernetes y operación para después; no son requisitos de esta primera clase.
+
+## Dónde encaja el entorno de desarrollo
+
+![Sketch de código, repositorio, pruebas, contenedor, registro y despliegue](../../docs/imagenes/desarrollo-moderno.jpg)
+
+La estación local permite editar y probar; Git conserva los cambios; la imagen prepara una ejecución reproducible. En sesión 9 practicamos solo el comienzo de este recorrido. Registro, automatización y despliegue se estudian después. Véase la [visión completa](../../README.md#visión-moderna-del-desarrollo-y-despliegue).
+
 ## Requisitos
 
 - 8 GiB de RAM y 20 GiB libres como referencia mínima.
@@ -49,7 +57,7 @@ Después de preparar las herramientas del sistema con la ruta elegida, cree el e
 ```bash
 ./scripts/setup_python.sh --apply
 ./scripts/check_environment.sh
-make test
+make test PYTHON=.venv/bin/python
 ```
 
 ### Linux nativo con Debian o Ubuntu
@@ -67,6 +75,8 @@ podman run --rm docker.io/library/hello-world
 ```
 
 Podman se ejecuta directamente sobre Linux. Use su usuario habitual; esta ruta no requiere `podman machine init` ni `podman machine start`. Después, desde la raíz del repositorio, continúe con `./scripts/setup_python.sh --apply` y `make test`.
+
+El conjunto mínimo anterior basta para sesión 9. Antes de sesión 12, instale `podman-compose` y compruebe `podman compose version`; el instalador completo `install_base.sh` ya incluye ese proveedor. En macOS, si solo instaló `podman`, prepare también `brew install podman-compose` antes del taller de servicios.
 
 Para otras distribuciones, siga la [instalación oficial de Podman](https://podman.io/docs/installation). `install_base.sh` automatiza Debian/Ubuntu y macOS; para Fedora, Arch y otras distribuciones, instale también Git, Make, Python, soporte de entornos virtuales y curl con el gestor correspondiente.
 

@@ -1,0 +1,19 @@
+# Ensayo local: no es una configuración completa de producción.
+services:
+  api:
+    image: ${LIBRERESERVA_IMAGE:-localhost/librereserva:0.1.0}
+    environment:
+      PYTHONUNBUFFERED: "1"
+    expose: ["8000"]
+  proxy:
+    image: docker.io/library/caddy:2-alpine
+    ports:
+      - "127.0.0.1:8443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - proxy_datos:/data
+      - proxy_config:/config
+    depends_on: [api]
+volumes:
+  proxy_datos:
+  proxy_config:

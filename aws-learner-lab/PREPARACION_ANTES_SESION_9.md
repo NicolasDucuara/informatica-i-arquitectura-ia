@@ -10,7 +10,9 @@ Esta actividad debe completarse por docentes y estudiantes antes de las 6:00 p. 
 La sesión 9 se ha reestructurado para abordar temas pendientes identificados:
 1. **Git colaborativo** - Uso práctico de fork, ramas y PRs
 2. **Contenedores básicos** - Docker/Podman para entornos reproducibles
-3. **Infraestructura flexible** - AWS Learner Lab O Cloud Privado O entorno local
+3. **Una aplicación conocida** - LibreReserva local, primero en `.venv` y luego en un contenedor
+
+La [ruta por sesiones](../docs/RUTA_CONTENEDORES.md) reserva Compose/YAML para sesión 12, persistencia para sesión 13 y Kubernetes para sesión 14. AWS es opcional en sesión 9; no prepare bases de datos, colas ni clústeres para la primera práctica. La [guía breve](../modules/01_entorno/PRACTICA_CONTENEDORES.md) contiene el recorrido y la evidencia mínima.
 
 ## Preparación institucional y docente
 
@@ -27,7 +29,7 @@ La sesión 9 se ha reestructurado para abordar temas pendientes identificados:
    - Verificar cuotas y servicios disponibles
 
 3. **Entorno local completo** (contingencia):
-   - Preparar materiales para simulación local
+   - Preparar la API LibreReserva y su Containerfile
    - Verificar que todos pueden ejecutar contenedores localmente
 
 ### Verificaciones técnicas comunes:
@@ -78,7 +80,7 @@ cd informatica-i-arquitectura-ia
 ```bash
 ./scripts/setup_python.sh --apply
 ./scripts/check_environment.sh
-make test
+make test PYTHON=.venv/bin/python
 ```
 
 5. Registre sistema operativo, versiones, motor elegido y resultado de pruebas en `docs/entorno.md`.
@@ -98,6 +100,8 @@ kubectl version --client
 ```
 
 El docente publica este recordatorio al terminar la sesión 12 y verifica el modo `--full` al inicio de la sesión 14.
+
+Antes de sesión 12, verifique también `podman compose version` o `docker compose version`. Si solo instaló Podman, instale su proveedor Compose siguiendo el [laboratorio](../modules/06_apis_datos_eventos/LABORATORIO.md). No sustituya una comprobación fallida por instalar otro motor durante la clase.
 
 ## Reglas de credenciales
 

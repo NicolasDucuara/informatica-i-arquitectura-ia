@@ -11,6 +11,12 @@ from urllib.parse import unquote
 
 ROOT = Path(__file__).resolve().parents[1]
 LINK = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
+CORE_MODULES = (
+    "01_entorno", "02_calidad", "03_c4_uml_adr", "04_modularidad",
+    "05_distribucion", "06_apis_datos_eventos", "07_pruebas",
+    "08_entrega_plataforma", "09_observabilidad", "10_seguridad",
+    "11_ia", "12_proyecto",
+)
 
 
 def validate_markdown_links() -> None:
@@ -34,9 +40,9 @@ def validate_markdown_links() -> None:
 
 
 def validate_modules() -> None:
-    modules = sorted(path for path in (ROOT / "modules").iterdir() if path.is_dir())
-    if len(modules) != 12:
-        raise SystemExit(f"Se esperaban 12 módulos y se encontraron {len(modules)}")
+    # Los materiales históricos del primer bloque no siguen esta estructura.
+    # Se conservan sin imponerles los encabezados del laboratorio LibreReserva.
+    modules = [ROOT / "modules" / name for name in CORE_MODULES]
     for module in modules:
         readme = module / "README.md"
         if not readme.exists():
@@ -48,7 +54,10 @@ def validate_modules() -> None:
 
 
 def validate_notebooks() -> None:
-    notebooks = sorted((ROOT / "modules").rglob("*.ipynb"))
+    notebooks = sorted(
+        path for name in CORE_MODULES
+        for path in (ROOT / "modules" / name).rglob("*.ipynb")
+    )
     if len(notebooks) != 3:
         raise SystemExit(f"Se esperaban 3 notebooks y se encontraron {len(notebooks)}")
     code_cells = 0

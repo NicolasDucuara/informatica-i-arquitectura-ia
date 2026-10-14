@@ -60,11 +60,13 @@ Una plantilla válida sintácticamente puede fallar por política del laboratori
 
 ## 5. Operación durante las cuatro horas
 
+Consulte la [ruta progresiva](../docs/RUTA_CONTENEDORES.md). La sesión 9 utiliza Git, `.venv` y una API en un contenedor: no dedique una hora a infraestructura AWS. La demostración S3 es opcional. En sesiones 12 y 13, anuncie una sola ruta principal (local o AWS), no dos laboratorios obligatorios. La sesión 14 no instala Forgejo, TLS ni telemetría a la vez que Kubernetes.
+
 | Hora | Acción docente en Learner Lab |
 |---|---|
-| 6:00–6:20 | confirmar que todos iniciaron el laboratorio y revisar prerrequisitos |
+| 6:00–6:20 | revisar prerrequisitos; iniciar Learner Lab solo si la actividad elegida usa AWS |
 | 6:20–7:10 | relacionar la decisión arquitectónica con el problema de LibreReserva |
-| 7:10–7:50 | desplegar el ejemplo docente y explicar recursos, permisos y costo |
+| 7:10–7:50 | demostrar la ruta elegida y explicar recursos, permisos y costo cuando corresponda |
 | 7:50–8:00 | pausa |
 | 8:00–9:25 | acompañar el ejercicio; observar errores y espacios de trabajo |
 | 9:25–9:50 | validar resultados, métricas, consumo y evidencia |
@@ -76,13 +78,13 @@ No se dedica el encuentro a crear cuentas ni a instalar herramientas extensas: e
 
 | Sesión | Publicar | Plantilla | Verificación docente |
 |---:|---|---|---|
-| 9 | entorno y línea base | `s09-foundation.yaml` | S3 y CloudFormation; crear/leer/borrar objeto antes de borrar pila |
+| 9 | `.venv`, un contenedor y PR | `s09-foundation.yaml` solo como anexo opcional | motor, API, reinicio y evidencia; S3 solo si se demuestra |
 | 10 | calidad medible | sin despliegue obligatorio | notebook local; confirmar acceso de consulta a CloudWatch |
 | 11 | dominio hexagonal | `s11-dynamodb.yaml` | escribir, leer y eliminar ítem DynamoDB |
 | 12 | sistemas distribuidos | `s12-messaging.yaml` | mensaje, reintento, DLQ y purga |
 | 13 | API, datos y eventos | `s13-serverless-api.yaml` | `LabRoleArn`, POST/GET, DynamoDB, SQS y logs |
 | 14 | pruebas y entrega | `s14-ecr.yaml` opcional | push/pull, digest y eliminación de imágenes |
-| 15 | jornada de proyecto | plantillas ya aprobadas | no introducir servicios nuevos |
+| 15 | una ampliación funcional u operativa | plantillas ya aprobadas o ejemplos locales revisados | alcance de cuatro horas, caso de fallo y limpieza |
 | 16 | cierre | pila final del equipo | demo desde cero y barrido de recursos |
 
 ## 7. Revisión y cierre

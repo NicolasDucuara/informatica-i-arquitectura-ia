@@ -3,6 +3,8 @@
 **Fecha:** 2 de diciembre de 2026, 6:00–10:00 p. m.
 **Resultado:** demostrar LibreReserva desde una revisión identificable, defender decisiones con evidencia y dejar Learner Lab sin recursos del proyecto.
 
+La defensa verifica el alcance acordado y la ampliación elegida en sesión 15. No exige implementar las cuatro alternativas de plataforma, TLS público, un clúster multinodo ni telemetría centralizada si no fueron parte del trabajo practicado y anunciado. Identifique qué implementó el equipo y qué sigue como ejercicio.
+
 ## Montaje docente en AWS Academy
 
 Publique `S16 — LibreReserva — demostración y cierre` con este archivo, la rúbrica final y la evidencia. Asigne ventanas de demostración y exija que cada equipo declare anticipadamente ruta local o AWS y plantilla aprobada. Mantenga 40 minutos finales protegidos para limpieza y auditoría; no permita servicios nuevos en esta sesión.

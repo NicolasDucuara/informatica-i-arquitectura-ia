@@ -4,6 +4,14 @@
 
 Elegir entre monolito modular, microservicios, eventos y funciones a partir de restricciones observadas, no de tendencias.
 
+## Ejecución reemplazable y datos separados
+
+![Sketch de réplicas sin estado, balanceo y almacenamiento separado](../../docs/imagenes/despliegue-sin-estado-cloud.jpg)
+
+Una réplica sin estado puede atender una solicitud sin depender de memoria durable de otra solicitud en esa misma instancia. Aunque se reemplacen o se añadan réplicas, los datos compartidos deben conservarse fuera del proceso. Para lograrlo se deben resolver consistencia, capacidad de la base de datos y costos. Los servicios cloud pueden facilitar el balanceo y el autoescalado, y un monolito modular también puede usar este diseño sin convertirse en microservicios.
+
+El dibujo es un objetivo arquitectónico: la agenda en RAM de LibreReserva aún no lo cumple. Relacione el experimento con esa limitación antes de distribuir la aplicación.
+
 ## Instalación paso a paso
 
 La discusión arquitectónica no requiere instalar una plataforma. Para el experimento de fallo se necesita Podman:

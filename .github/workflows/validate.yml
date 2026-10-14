@@ -21,3 +21,16 @@ jobs:
         run: python -m pip install -r requirements-dev.txt
       - name: Ejecutar pruebas HTTP y basadas en propiedades
         run: python -m pytest labs/librereserva/tests modules/07_pruebas -v
+      - name: Construir y registrar la imagen del commit
+        run: |
+          mkdir -p dist
+          docker build -f labs/librereserva/Containerfile -t localhost/librereserva:${{ github.sha }} labs/librereserva
+          docker image inspect localhost/librereserva:${{ github.sha }} --format '{{.Id}}' > dist/image-id.txt
+          docker save localhost/librereserva:${{ github.sha }} | gzip > dist/librereserva-image.tar.gz
+      - name: Conservar imagen y evidencia por tres días
+        uses: actions/upload-artifact@v7
+        with:
+          name: librereserva-${{ github.sha }}
+          path: dist/
+          retention-days: 3
+          if-no-files-found: error

@@ -21,6 +21,22 @@ flowchart LR
   IA[IA asistiva] -. revisión y validación .-> B
 ```
 
+## Visión moderna del desarrollo y despliegue
+
+El repositorio conserva el código y sus decisiones. Las pruebas y la construcción producen una imagen de contenedor identificable, que se guarda en un registro y se despliega con la configuración del ambiente. Los logs y las mediciones permiten revisar el resultado y orientar el siguiente cambio.
+
+![Sketch del recorrido desde código y repositorio Git hasta pruebas, imagen OCI, registro y despliegue](docs/imagenes/desarrollo-moderno.jpg)
+
+Para crecer sin depender de una instancia concreta, la aplicación procesa solicitudes en réplicas reemplazables. Aunque las réplicas puedan reemplazarse, los datos deben permanecer en servicios separados: base de datos, almacenamiento de archivos/objetos y, cuando corresponde, colas o almacenamiento de sesiones. **Sin estado** describe la ejecución de la aplicación, no un sistema sin datos.
+
+![Sketch de balanceo, réplicas sin estado, almacenamiento separado y servicios cloud para escalar](docs/imagenes/despliegue-sin-estado-cloud.jpg)
+
+Un proveedor cloud puede aportar cómputo gestionado, balanceo, autoescalado, bases de datos y almacenamiento de objetos. El equipo sigue siendo responsable de las reglas, consistencia, permisos, límites, recuperación y costos. Escalar la API no elimina los cuellos de botella de sus datos ni exige adoptar Kubernetes.
+
+En LibreReserva esta es una **arquitectura objetivo**. La API base guarda la agenda en RAM: todavía no permite reemplazar réplicas conservando reservas ni compartirlas entre procesos. La [ruta por sesiones](docs/RUTA_CONTENEDORES.md) desarrolla esa evolución gradualmente, sin exigir toda la arquitectura en sesión 9.
+
+Referencias: [procesos sin estado](https://12factor.net/processes), [diseño para escalar horizontalmente](https://learn.microsoft.com/en-us/azure/architecture/guide/design-principles/scale-out) y [elasticidad en cloud](https://docs.cloud.google.com/architecture/framework/performance-optimization).
+
 ## Agenda oficial del curso
 
 - Periodo: segundo semestre de 2026.
@@ -62,6 +78,12 @@ El miércoles 7 de octubre corresponde a la Semana Universitaria y no se program
 
 La descripción institucional completa se encuentra en la [agenda del segundo semestre de 2026](docs/AGENDA_16_SEMANAS.md). Si existe una diferencia entre una guía de laboratorio y la agenda, prevalecen el syllabus y las orientaciones del profesor titular.
 
+### Contenedores y despliegue sin sobrecargar una clase
+
+La [ruta por sesiones](docs/RUTA_CONTENEDORES.md) relaciona la presentación CyberColombia con los archivos del repositorio. En sesión 9 se ejecuta una API con `.venv` y un contenedor. YAML/Compose y colas se introducen en sesión 12; persistencia/transacciones en sesión 13; CI y Kubernetes básico en sesión 14. Las ampliaciones de ambientes, TLS, configuración, escalado y telemetría se eligen por equipo en sesión 15. El cierre no añade tecnologías.
+
+La ruta distingue configuración ejecutable, demostraciones independientes e integración por desarrollar. Levantar PostgreSQL/RabbitMQ no conecta automáticamente la API, y añadir réplicas no comparte su agenda en memoria.
+
 ## Correspondencia entre la agenda y los materiales
 
 | Semana | Material principal | Evidencia esperada | Software de apoyo |
@@ -74,13 +96,13 @@ La descripción institucional completa se encuentra en la [agenda del segundo se
 | 6 | [Lenguajes modernos orientados a objetos: Java](modules/01_Lenguajes_Modernos/README.md) | Java POO |
 | 7 | [Lenguajes modernos orientados a objetos: Java](modules/01_Lenguajes_Modernos/README.md) | Java POO |
 | 8 | [Metapatrón MVC y manejo de comunicaciones](modules/01_Lenguajes_Modernos/README.md) | Aplicacion Web con Python-FastApi y java-SpringBoots |
-| 9 | [Entorno reproducible](modules/01_entorno/README.md) + [Git colaborativo](#guía-de-git-y-github-para-trabajo-colaborativo) | Estación verificada, flujo Git colaborativo y contenedores básicos | Git, Python, Make, Docker/Podman |
+| 9 | [Entorno reproducible](modules/01_entorno/README.md), [un contenedor](modules/01_entorno/PRACTICA_CONTENEDORES.md) y Git | `.venv`, API en contenedor, reinicio y PR | Git, Python, Make, un motor Docker/Podman |
 | 10 | [Atributos de calidad](modules/02_calidad/README.md) | Escenarios con unidad, umbral y condiciones | Jupyter, Python |
 | 11 | [Atributos de calidad](modules/02_calidad/README.md) y [modularidad y dominio](modules/04_modularidad/README.md) | Función de aptitud, límites y núcleo hexagonal | Python, FastAPI |
-| 12 | [Sistemas distribuidos](modules/05_distribucion/README.md) | Matriz de decisión y experimento de fallo | Podman |
-| 13 | [API, datos y eventos](modules/06_apis_datos_eventos/README.md) | Contrato, persistencia, prueba concurrente y evento | PostgreSQL, RabbitMQ |
+| 12 | [Sistemas distribuidos](modules/05_distribucion/README.md) y [mensajes](modules/06_apis_datos_eventos/LABORATORIO.md) | Mensaje repetido y decisión síncrona/cola | Compose y RabbitMQ, o SQS |
+| 13 | [Datos y transacciones](modules/06_apis_datos_eventos/LABORATORIO.md) | Persistencia, conflicto y análisis de doble escritura | PostgreSQL local o corte vertical AWS |
 | 14 | [Implementación y pruebas](modules/07_pruebas/README.md) y [entrega y plataforma](modules/08_entrega_plataforma/README.md) | Suite de pruebas, imagen OCI y despliegue local | pytest, Podman, Forgejo, kind |
-| 15 | [Proyecto integrador](modules/12_proyecto/README.md) | Incremento autónomo y registro de decisiones pendientes | Herramientas seleccionadas por el equipo |
+| 15 | [Proyecto integrador](modules/12_proyecto/README.md) y [ampliación elegida](aws-learner-lab/sesiones/15_proyecto/README.md) | Un incremento funcional u operativo de cuatro horas | Solo herramientas de la ruta elegida |
 | 16 | [Entrega y plataforma](modules/08_entrega_plataforma/README.md) y [proyecto integrador](modules/12_proyecto/README.md) | Despliegue reproducible, demostración y paquete final | Podman, Kubernetes local |
 
 ### Material complementario y transversal

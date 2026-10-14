@@ -71,6 +71,19 @@ AWS Academy Learner Lab se utiliza en las semanas 9 a 16 como entorno de las pr�
 
 Las instalaciones extensas y las lecturas se realizan en las horas de trabajo cooperativo o autónomo. Durante el encuentro se priorizan decisiones, experimentos, construcción y validación.
 
+## Distribución de contenedores y despliegue
+
+La [ruta por sesiones](RUTA_CONTENEDORES.md) conserva esta agenda y separa los niveles de práctica:
+
+- Sesión 9: `.venv`, elección de un motor, una imagen, una API, reinicio y evidencia Git. AWS es una demostración opcional, no una entrega adicional.
+- Sesión 12: YAML/Compose y cola con un mensaje repetido; escoger RabbitMQ local o SQS.
+- Sesión 13: persistencia y transacción, con PostgreSQL local o la ruta AWS; integración/outbox por incrementos.
+- Sesión 14: pruebas, CI con imagen, Deployment/Service, acceso y recuperación. Registro ECR solo como extensión.
+- Sesión 15: una ampliación funcional u operativa acordada; no todas las capacidades de producción.
+- Sesión 16: demostrar lo ya practicado y limpiar. No instalar servicios nuevos.
+
+Los materiales avanzados permanecen como consulta. Una demostración de ConfigMap/PVC o proxy TLS no se considera persistencia ni seguridad productiva ya integrada en LibreReserva.
+
 ## Alcance de la jornada del 25 de noviembre
 
 La jornada de proyecto debe tener una duración esperada de cuatro horas y producir:
@@ -90,4 +103,4 @@ Como mínimo, un evaluador debe poder partir de un clon limpio, ejecutar las pru
 
 La evidencia ampliada —observabilidad, SBOM, análisis de seguridad y registro de IA— se exige únicamente cuando haya sido practicada y declarada en los criterios de evaluación. El cierre debe incluir costo consumido y confirmación de eliminación de recursos en AWS.
 
-Última actualización metodológica: 11 de agosto de 2026.
+Última actualización metodológica: 14 de octubre de 2026.

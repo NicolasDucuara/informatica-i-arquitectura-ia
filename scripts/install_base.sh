@@ -9,7 +9,7 @@ fi
 
 os_name="$(uname -s)"
 if [[ "$os_name" == "Darwin" ]]; then
-  packages=(git make python podman plantuml graphviz jq)
+  packages=(git make python podman podman-compose plantuml graphviz jq)
   printf 'Plan macOS: brew install %s\n' "${packages[*]}"
   [[ "$mode" == "--apply" ]] || exit 0
   command -v brew >/dev/null 2>&1 || {
@@ -19,7 +19,7 @@ if [[ "$os_name" == "Darwin" ]]; then
   brew install "${packages[@]}"
   printf 'Después ejecute: podman machine init && podman machine start\n'
 elif [[ -r /etc/debian_version ]]; then
-  packages=(git make python3 python3-venv python3-pip podman plantuml graphviz curl jq)
+  packages=(git make python3 python3-venv python3-pip podman podman-compose plantuml graphviz curl jq)
   printf 'Plan Debian/Ubuntu: sudo apt-get update; sudo apt-get install %s\n' "${packages[*]}"
   [[ "$mode" == "--apply" ]] || exit 0
   sudo apt-get update

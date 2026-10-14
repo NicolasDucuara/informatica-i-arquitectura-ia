@@ -1,7 +1,18 @@
 # Sesión 15 — Jornada autónoma de proyecto
 
 **Fecha:** 25 de noviembre de 2026, cuatro horas de trabajo autónomo, sin encuentro sincrónico.
-**Resultado:** integrar un incremento demostrable de LibreReserva sin introducir servicios nuevos ni trasladar deuda de limpieza a la sesión final.
+**Resultado:** integrar un incremento demostrable de LibreReserva con herramientas preparadas y sin trasladar deuda de limpieza a la sesión final.
+
+## Elección de una ampliación
+
+El equipo y el docente eligen **una** capacidad, con criterio de aceptación que quepa en cuatro horas:
+
+- Un incremento funcional de [persistencia o eventos](../../../modules/06_apis_datos_eventos/LABORATORIO.md).
+- [Escalado/actualización/rollback o demo de configuración/almacenamiento](../../../modules/08_entrega_plataforma/OPERACION.md), con las limitaciones de la API en RAM explícitas.
+- [Ensayo local de proxy TLS y decisión de ambientes](../../../modules/08_entrega_plataforma/DESPLIEGUE.md).
+- [Diagnóstico ligero o telemetría](../../../modules/09_observabilidad/README.md), con la infraestructura preparada antes de la jornada.
+
+Las alternativas son excluyentes como carga mínima. No exija TLS, varias plataformas, Forgejo, bases de datos integradas y observabilidad completa al mismo equipo en esta jornada. El docente anuncia las alternativas al cerrar sesión 14 y comprueba sus prerrequisitos; los ejemplos opcionales se revisan antes, no se instalan por primera vez durante la defensa final.
 
 ## Montaje docente en AWS Academy
 
@@ -20,7 +31,7 @@ Publique `S15 — LibreReserva — jornada autónoma` al menos 48 horas antes. M
 
 ## Ejercicio propuesto
 
-Cada equipo selecciona una sola capacidad: política de cancelación, consulta por recurso, notificación idempotente o prueba de concurrencia. El incremento debe atravesar dominio, puerto/adaptador, API y pruebas sin exceder lo practicado.
+Cada equipo selecciona una capacidad funcional u operativa de la lista anterior. Un cambio funcional debe relacionar dominio, adaptador, API y pruebas. Un cambio operativo debe demostrar comportamiento anterior/posterior y un procedimiento reproducible de recuperación. En ambos casos se registra lo que permanece pendiente.
 
 Si usa AWS:
 
