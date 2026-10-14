@@ -8,10 +8,10 @@
 - [Herencia](https://colab.research.google.com/drive/1V9N-Ob89EjbjlP1HZg05_X2VOChB8P1A?usp=sharing)
 
 ### Notebooks Jupyter
-- [Clases y Funciones](modules/01_Lenguajes_Modernos/1.ipynb)
-- [Clases y Metodos](modules/01_Lenguajes_Modernos/2.ipynb)
-- [Clases y Objetos](modules/01_Lenguajes_Modernos/3.ipynb)
-- [Herencia](modules/01_Lenguajes_Modernos/4.ipynb)
+- [Clases y Funciones](modules/1.ipynb)
+- [Clases y Metodos](modules/2.ipynb)
+- [Clases y Objetos](modules/3.ipynb)
+- [Herencia](modules/4.ipynb)
 
 ## Java
 - [POO] (https://www.w3schools.com/java/java_oop.asp)
@@ -20,7 +20,7 @@
 - [Clases y Metodos] (https://www.w3schools.com/java/java_class_methods.asp)
 
 ## API Python
-[Guia Completa](<modules/01_Lenguajes_Modernos/API Python/README.md>)
+[Guia Completa](modules/01_Lenguajes_Modernos/API%20Python/README.md)
 
 ## API Java
-[Guia Completa](<modules/01_Lenguajes_Modernos/API Java/README.md>)
+[Guia Completa](modules/01_Lenguajes_Modernos/API%20Java/README.md)

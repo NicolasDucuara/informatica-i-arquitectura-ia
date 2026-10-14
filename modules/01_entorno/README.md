@@ -12,16 +12,41 @@ Preparar una estación verificable, explicar qué es una decisión arquitectóni
 
 ## Instalación paso a paso
 
-1. Clone el repositorio y entre en él.
-2. Revise el instalador; no lo ejecute a ciegas.
-3. Muestre el plan sin cambiar el sistema.
-4. Aplique el plan solo si coincide con su plataforma.
-5. Cree el entorno Python y valide.
+Todos los comandos se ejecutan desde la raíz del repositorio. Los materiales de esta sesión están en `update_esteban`:
+
+```bash
+git clone --branch update_esteban https://github.com/eshernan/informatica-i-arquitectura-ia.git
+cd informatica-i-arquitectura-ia
+```
+
+Si ya tiene el repositorio, revise `git status` y guarde sus cambios antes de cambiar de rama. Para actualizar una copia limpia:
+
+```bash
+git fetch origin
+git switch update_esteban
+git pull --ff-only origin update_esteban
+```
+
+Elija una ruta de contenedores:
+
+| Sistema y motor | Instrucciones | Instalador |
+|---|---|---|
+| Ubuntu 22.04, 24.04 o 26.04 con Docker, incluido EC2 | [Docker en Ubuntu y EC2](#instalación-con-script-en-ubuntu-y-ec2) | [install_docker_ubuntu.sh](../../scripts/install_docker_ubuntu.sh) |
+| Debian/Ubuntu con Podman | [Linux nativo con Podman](#linux-nativo-con-debian-o-ubuntu) | [install_base.sh](../../scripts/install_base.sh) |
+| macOS con Podman | [Máquina de Podman](#macos-y-podman) | [install_base.sh](../../scripts/install_base.sh) |
+| Windows con WSL2 | [Terminal Linux en Windows](#windows) | La ruta Ubuntu o Debian elegida dentro de WSL2 |
+
+Para la ruta Podman, revise y aplique el instalador general:
 
 ```bash
 sed -n '1,240p' scripts/install_base.sh
 ./scripts/install_base.sh
 ./scripts/install_base.sh --apply
+```
+
+Después de preparar las herramientas del sistema con la ruta elegida, cree el entorno Python y valide:
+
+```bash
 ./scripts/setup_python.sh --apply
 ./scripts/check_environment.sh
 make test
@@ -51,7 +76,7 @@ Elija Docker o Podman para la práctica. `install_base.sh` instala Podman, no Do
 
 #### Instalación con script en Ubuntu y EC2
 
-Para Ubuntu 22.04, 24.04 y **26.04 LTS (Resolute)**, desde la raíz del repositorio:
+Use el [instalador Docker para Ubuntu](../../scripts/install_docker_ubuntu.sh). Para Ubuntu 22.04, 24.04 y **26.04 LTS (Resolute)**, desde la raíz del repositorio:
 
 ```bash
 cat /etc/os-release

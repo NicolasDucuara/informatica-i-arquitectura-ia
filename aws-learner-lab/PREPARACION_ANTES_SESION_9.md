@@ -64,24 +64,25 @@ export AWS_REGION=REGION_ACORDADA
 
 ## Preparación del estudiante
 
-1. Acepte la invitación a la clase con su cuenta institucional.
-2. Inicie Learner Lab y ubique el acceso a la consola de AWS.
-3. Abra CloudShell si está habilitado. Si no lo está, instale AWS CLI v2 en su equipo y use únicamente las credenciales temporales entregadas por el laboratorio.
-4. Clone este repositorio y compruebe el entorno local:
+1. Prepare Git y acceso a GitHub; cree el fork del equipo.
+2. Clone la rama utilizada en la sesión:
 
 ```bash
-git clone https://github.com/eshernan/informatica-i-arquitectura-ia.git
+git clone --branch update_esteban https://github.com/eshernan/informatica-i-arquitectura-ia.git
 cd informatica-i-arquitectura-ia
-./scripts/check_environment.sh
-./scripts/install_base.sh          # muestra el plan
-./scripts/install_base.sh --apply  # solo después de revisarlo
+```
+
+3. Elija Docker o Podman en la [guía de entorno](../modules/01_entorno/README.md). Para Ubuntu 26.04 en EC2, siga [Docker en Ubuntu y EC2](../modules/01_entorno/README.md#instalación-con-script-en-ubuntu-y-ec2) y revise el [instalador](../scripts/install_docker_ubuntu.sh).
+4. Complete el entorno Python y las pruebas:
+
+```bash
 ./scripts/setup_python.sh --apply
-./aws-learner-lab/scripts/check_preparation.sh
+./scripts/check_environment.sh
 make test
 ```
 
-5. Registre en la entrega previa: identificador de cuenta parcialmente oculto, región, servicios disponibles, salida de `make test` y cualquier restricción encontrada.
-6. Repase los conceptos equivalentes a AWS Academy Cloud Foundations: regiones y zonas, responsabilidad compartida, IAM, cómputo, almacenamiento, redes, bases de datos, monitoreo y costos.
+5. Registre sistema operativo, versiones, motor elegido y resultado de pruebas en `docs/entorno.md`.
+6. Si participa en la ruta AWS, acepte la invitación institucional, inicie Learner Lab y use CloudShell o AWS CLI con credenciales temporales. Ejecute `./aws-learner-lab/scripts/check_preparation.sh` y registre región y restricciones. Esta comprobación no es requisito para la práctica local de Git y contenedores.
 
 ### Preparación escalonada de contenedores
 
@@ -107,4 +108,4 @@ El docente publica este recordatorio al terminar la sesión 12 y verifica el mod
 
 ## Criterio de habilitación
 
-La sesión 9 puede empezar su práctica si al menos el 90 % del grupo inicia Learner Lab, obtiene identidad con STS y conoce la región acordada. Los casos pendientes trabajan en pareja durante el encuentro y se resuelven con soporte institucional; no se cambia a cuentas personales.
+La práctica de Git y contenedores puede comenzar cuando los equipos disponen de Git, acceso al fork y un motor Docker o Podman operativo, localmente o en una instancia Ubuntu institucional. Los casos pendientes trabajan en pareja. Solo el ejercicio AWS requiere identidad temporal y región acordada; si Learner Lab no está habilitado, se utiliza la ruta local sin recurrir a cuentas personales.

@@ -36,7 +36,7 @@ El primer bloque desarrolla los temas definidos por el profesor titular. El segu
 | 7 | 23 sep. | Carlos Montenegro | Metapatrón MVC y manejo de comunicaciones |
 | 8 | 30 sep. | Carlos Montenegro | Evaluación del primer bloque |
 | — | 7 oct. | Semana Universitaria | No se programa una sesión ordinaria |
-| 9 | 14 oct. | Esteban Hernández | Entorno reproducible: preparación y verificación de la estación de trabajo |
+| 9 | 14 oct. | Esteban Hernández | Entorno reproducible, Git colaborativo y contenedores: preparación y verificación de la estación de trabajo |
 | 10 | 21 oct. | Esteban Hernández · virtual | Atributos de calidad: escenarios medibles y funciones de aptitud |
 | 11 | 28 oct. | Esteban Hernández | Atributos de calidad aplicados a modularidad, dominio y núcleo hexagonal |
 | 12 | 4 nov. | Esteban Hernández | Sistemas distribuidos: decidir antes de distribuir |

@@ -74,7 +74,7 @@ La descripción institucional completa se encuentra en la [agenda del segundo se
 | 6 | [Lenguajes modernos orientados a objetos: Java](modules/01_Lenguajes_Modernos/README.md) | Java POO |
 | 7 | [Lenguajes modernos orientados a objetos: Java](modules/01_Lenguajes_Modernos/README.md) | Java POO |
 | 8 | [Metapatrón MVC y manejo de comunicaciones](modules/01_Lenguajes_Modernos/README.md) | Aplicacion Web con Python-FastApi y java-SpringBoots |
-| 9 | [Entorno reproducible](modules/01_entorno/README.md) + [Git colaborativo](modules/00_git_colaborativo/README.md) | Estación verificada, flujo Git colaborativo y contenedores básicos | Git, Python, Make, Docker/Podman |
+| 9 | [Entorno reproducible](modules/01_entorno/README.md) + [Git colaborativo](#guía-de-git-y-github-para-trabajo-colaborativo) | Estación verificada, flujo Git colaborativo y contenedores básicos | Git, Python, Make, Docker/Podman |
 | 10 | [Atributos de calidad](modules/02_calidad/README.md) | Escenarios con unidad, umbral y condiciones | Jupyter, Python |
 | 11 | [Atributos de calidad](modules/02_calidad/README.md) y [modularidad y dominio](modules/04_modularidad/README.md) | Función de aptitud, límites y núcleo hexagonal | Python, FastAPI |
 | 12 | [Sistemas distribuidos](modules/05_distribucion/README.md) | Matriz de decisión y experimento de fallo | Podman |
@@ -115,15 +115,18 @@ El paquete [LibreReserva en AWS Academy Learner Lab](aws-learner-lab/README.md) 
 
 ## Inicio rápido
 
+Los materiales de la sesión 9 se publican en `update_esteban`. Consulte la [guía de instalación por sistema operativo](modules/01_entorno/README.md), especialmente [Docker en Ubuntu 26.04 y EC2](modules/01_entorno/README.md#instalación-con-script-en-ubuntu-y-ec2) y el [script instalador](scripts/install_docker_ubuntu.sh).
+
 Los scripts son deliberadamente conservadores: muestran el plan por defecto y solo instalan paquetes cuando se usa `--apply`.
 
 ```bash
-git clone https://github.com/eshernan/informatica-i-arquitectura-ia.git
+git clone --branch update_esteban https://github.com/eshernan/informatica-i-arquitectura-ia.git
 cd informatica-i-arquitectura-ia
 
 ./scripts/check_environment.sh
-./scripts/install_base.sh           # inspección, no modifica el sistema
-./scripts/install_base.sh --apply   # instala después de revisar el plan
+# Ruta Podman: revisar y ejecutar install_base.sh según la guía de entorno.
+# Ruta Docker en Ubuntu: revisar y ejecutar install_docker_ubuntu.sh.
+# Complete la instalación elegida antes de preparar Python.
 ./scripts/setup_python.sh --apply
 
 make test

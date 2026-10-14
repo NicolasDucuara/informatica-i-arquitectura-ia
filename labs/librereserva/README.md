@@ -6,6 +6,8 @@ Consulte la [documentación de la API](API.md) para ver el diagrama de arquitect
 
 ## Instalación
 
+Prepare las herramientas con la [guía de entorno](../../modules/01_entorno/README.md). Para Docker en Ubuntu 26.04/EC2, siga la [instalación específica](../../modules/01_entorno/README.md#instalación-con-script-en-ubuntu-y-ec2).
+
 Desde la raíz:
 
 ```bash

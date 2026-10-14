@@ -7,7 +7,7 @@
 | CPU / RAM | |
 | Git | |
 | Python | |
-| Podman | |
+| Motor elegido Docker o Podman y versión | |
 | kubectl / kind | |
 | Herramientas de seguridad | |
 | Ollama y modelo, si aplica | |

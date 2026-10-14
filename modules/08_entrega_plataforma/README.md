@@ -8,12 +8,15 @@ Relacionar una confirmación Git con pruebas, imagen OCI, SBOM y despliegue repr
 
 ### 1. Podman e imagen
 
+Prepare Podman siguiendo la [guía de entorno](../01_entorno/README.md). La sesión 9 admite también [Docker en Ubuntu y EC2](../01_entorno/README.md#instalación-con-script-en-ubuntu-y-ec2); los pasos Kubernetes siguientes describen la ruta Podman. Todos los comandos de este módulo se ejecutan desde la raíz del repositorio.
+
 ```bash
-./scripts/install_base.sh --apply
-cd labs/librereserva
-podman build -t localhost/librereserva:0.1.0 .
-podman run --rm -p 8000:8000 localhost/librereserva:0.1.0
+podman info
+podman build -f labs/librereserva/Containerfile -t localhost/librereserva:0.1.0 labs/librereserva
+podman run --rm -p 127.0.0.1:8000:8000 localhost/librereserva:0.1.0
 ```
+
+Detenga la ejecución con Ctrl+C antes de continuar con el clúster.
 
 ### 2. kubectl y kind
 

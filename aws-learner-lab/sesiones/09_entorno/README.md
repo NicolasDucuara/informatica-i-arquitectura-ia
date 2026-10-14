@@ -22,13 +22,13 @@ Configure entrega para las 10:10 p. m. Indique opciones:
 ### Hora 1 (6:00-7:00 p.m.): Git colaborativo en la práctica
 | Tiempo | Tema y acción |
 |---|---|
-| 6:00–6:30 | **Activación y configuración Git**<br>- Verificar instalación: `git --version`<br>- Configurar identidad: `git config --global user.name/email`<br>- Revisar guía de Git (escenarios E1-E3) |
+| 6:00–6:30 | **Activación y configuración Git**<br>- Verificar instalación: `git --version`<br>- Configurar identidad: `git config --global user.name "Su Nombre"` y `git config --global user.email "su@email"`<br>- Revisar guía de Git (escenarios E1-E3) |
 | 6:30–7:00 | **Ejercicio práctico en parejas**<br>- Fork del repositorio actual<br>- Configuración de remotos: `origin` (fork), `upstream` (original)<br>- Primer commit y PR siguiendo la guía |
 
 ### Hora 2 (7:00-8:00 p.m.): Entorno reproducible y contenedores
 | Tiempo | Tema y acción |
 |---|---|
-| 7:00–7:30 | **Verificación entorno local**<br>- `./scripts/check_environment.sh`<br>- `./scripts/install_base.sh --apply` (si necesario)<br>- `./scripts/setup_python.sh --apply`<br>- Completar `docs/entorno.md` |
+| 7:00–7:30 | **Verificación entorno local**<br>- `./scripts/check_environment.sh`<br>- Elegir Docker o Podman en la [guía de entorno](../../../modules/01_entorno/README.md); Ubuntu/EC2: `./scripts/install_docker_ubuntu.sh --apply`<br>- `./scripts/setup_python.sh --apply`<br>- Completar `docs/entorno.md` |
 | 7:30–8:00 | **Introducción a contenedores**<br>- Docker vs Podman<br>- Ejecutar contenedor simple: `docker run hello-world` o `podman run hello-world`<br>- Construir imagen básica |
 
 ### Hora 3 (8:00-9:00 p.m.): Infraestructura en la nube
@@ -49,7 +49,7 @@ Configure entrega para las 10:10 p. m. Indique opciones:
 ```bash
 # Estudiante A y B trabajan juntos
 # 1. Clonar repositorio
-git clone https://github.com/eshernan/informatica-i-arquitectura-ia.git
+git clone --branch update_esteban https://github.com/eshernan/informatica-i-arquitectura-ia.git
 cd informatica-i-arquitectura-ia
 
 # 2. Configurar remotos
@@ -69,27 +69,32 @@ git add docs/entorno.md
 git commit -m "Agrega secciones Git y Contenedores al entorno"
 git push -u origin sesion9-equipoXX
 
-# 6. Crear PR en GitHub desde sesion9-equipoXX hacia dev
+# 6. Crear PR en GitHub desde sesion9-equipoXX hacia update_esteban del repositorio original
 ```
 
 ### Taller 2: Contenedores básicos
+
+Prepare el motor con la [guía de entorno](../../../modules/01_entorno/README.md). En Ubuntu 26.04/EC2, revise el [instalador Docker](../../../scripts/install_docker_ubuntu.sh) y aplíquelo antes del taller. Ejecute una sola ruta desde la raíz del repositorio.
+
+**Docker en Ubuntu**, con los permisos de la instalación:
+
 ```bash
-# Verificar Docker/Podman
-docker --version || podman --version
-
-# Ejecutar contenedor de prueba
-docker run --rm hello-world
-
-# Construir imagen simple
-cat > Dockerfile.simple << 'EOF'
-FROM alpine:latest
-RUN echo "¡Contenedor funcionando!" > /mensaje.txt
-CMD cat /mensaje.txt
-EOF
-
-docker build -f Dockerfile.simple -t prueba-sesion9 .
-docker run --rm prueba-sesion9
+sudo docker info
+sudo docker run --rm docker.io/library/hello-world
+sudo docker build -f labs/librereserva/Containerfile -t localhost/librereserva:0.1.0 labs/librereserva
+sudo docker run --rm -p 127.0.0.1:8000:8000 localhost/librereserva:0.1.0
 ```
+
+**Podman**:
+
+```bash
+podman info
+podman run --rm docker.io/library/hello-world
+podman build -f labs/librereserva/Containerfile -t localhost/librereserva:0.1.0 labs/librereserva
+podman run --rm -p 127.0.0.1:8000:8000 localhost/librereserva:0.1.0
+```
+
+En otra terminal del mismo equipo o instancia, compruebe `curl -fsS http://127.0.0.1:8000/salud/viva`. Consulte la [API y sus endpoints](../../../labs/librereserva/API.md). Para acceder desde su computador a una instancia EC2, use el túnel SSH explicado en la guía de entorno. Detenga el contenedor con Ctrl+C al terminar.
 
 ### Taller 3: Infraestructura (opciones)
 
@@ -115,7 +120,7 @@ echo "Bucket creado: $bucket_name"
 ```bash
 # Simular creación de recursos
 mkdir -p .infra-simulada/s09-equipoXX
-echo '{"equipo": "XX", "fecha": "'$(date -I)'", "tipo": "simulacion"}' \
+echo '{"equipo": "XX", "fecha": "'$(date +%F)'", "tipo": "simulacion"}' \
   > .infra-simulada/s09-equipoXX/evidencia.json
 
 # Verificar simulación
@@ -129,7 +134,7 @@ cat .infra-simulada/s09-equipoXX/evidencia.json
 2. **Contenedores**: Salida de `docker run hello-world` o equivalente
 3. **Entorno**: Archivo `docs/entorno.md` completado
 4. **Infraestructura**:
-   - AWS: Nombre del bucket y objeto subido
+   - AWS: Nombre del bucket y estado de la pila
    - Cloud Privado: Evidencia según guía institucional
    - Local: Archivo de simulación `.infra-simulada/...`
 
@@ -153,7 +158,7 @@ rm -rf .infra-simulada/s09-equipoXX
 - O completar **ruta local completa** con simulación
 
 ### Si hay problemas con Docker/Podman:
-- Usar contenedores preconstruidos: `docker run -it python:3.11-slim bash`
+- Revisar el motor y los permisos con la guía de entorno; usar un equipo de pareja si el motor sigue sin funcionar
 - O saltar a sección de verificación teórica
 
 ### Si el tiempo es limitado:

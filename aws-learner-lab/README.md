@@ -14,13 +14,15 @@ No se almacenan credenciales de AWS en Git. Las plantillas no crean usuarios, cl
 1. El docente completa la [preparación antes de la sesión 9](PREPARACION_ANTES_SESION_9.md).
 2. Configura la clase siguiendo la [guía docente](GUIA_DOCENTE_AWS_ACADEMY.md).
 3. Publica la actividad previa con al menos cinco días de anticipación.
-4. Cada estudiante inicia su Learner Lab y ejecuta:
+4. Para la ruta AWS, cada estudiante inicia su Learner Lab y ejecuta:
 
 ```bash
-git clone https://github.com/eshernan/informatica-i-arquitectura-ia.git
+git clone --branch update_esteban https://github.com/eshernan/informatica-i-arquitectura-ia.git
 cd informatica-i-arquitectura-ia
 ./aws-learner-lab/scripts/check_preparation.sh
 ```
+
+Para Git y contenedores, siga primero la [guía de entorno](../modules/01_entorno/README.md); la comprobación AWS siguiente solo corresponde a la ruta Learner Lab.
 
 El script es de solo lectura: comprueba herramientas, identidad temporal, región y acceso a los servicios usados. No imprime secretos ni crea recursos.
 
