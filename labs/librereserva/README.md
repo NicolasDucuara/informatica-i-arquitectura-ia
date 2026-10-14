@@ -2,6 +2,8 @@
 
 Incremento vertical mínimo usado por todos los módulos. El núcleo de dominio no depende de FastAPI; la API es un adaptador reemplazable.
 
+Consulte la [documentación de la API](API.md) para ver el diagrama de arquitectura, los servicios, sus endpoints, ejemplos de solicitudes y respuestas, y las rutas de ejecución con Docker o Podman.
+
 ## Instalación
 
 Desde la raíz:
