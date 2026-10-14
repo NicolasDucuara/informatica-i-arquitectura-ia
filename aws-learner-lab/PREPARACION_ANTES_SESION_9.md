@@ -85,7 +85,9 @@ make test
 
 ### Preparación escalonada de contenedores
 
-Podman no es necesario en la sesión 9 y `kind` no es necesario hasta la sesión 14. Para evitar dedicar esa clase a instalaciones, complete antes del 18 de noviembre la [instalación de Podman](../modules/08_entrega_plataforma/README.md) y las guías oficiales de `kubectl` y `kind` enlazadas allí. Después ejecute:
+Docker o Podman debe estar instalado y funcionando para la sesión 9 del 14 de octubre. Siga la [guía de instalación del entorno](../modules/01_entorno/README.md), que incluye Linux nativo Debian/Ubuntu, macOS y Windows con WSL2. En Linux nativo, Podman se ejecuta directamente; la máquina de Podman indicada para macOS no es un requisito de esa ruta. Compruebe el motor con `podman info` o `docker info` y ejecute un contenedor de prueba antes de clase.
+
+`kind` y `kubectl` se requieren en la sesión 14. Complete su instalación antes del 18 de noviembre siguiendo las guías oficiales enlazadas en el [módulo de entrega y plataforma](../modules/08_entrega_plataforma/README.md). Para esa sesión, la ruta de Kubernetes del repositorio utiliza Podman. Después ejecute:
 
 ```bash
 ./aws-learner-lab/scripts/check_preparation.sh --full

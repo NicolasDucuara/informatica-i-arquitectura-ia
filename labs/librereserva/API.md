@@ -30,6 +30,8 @@ Los servicios del diagrama son capacidades de una misma aplicación; no se ejecu
 
 Desde la raíz del repositorio:
 
+En Linux nativo, ejecute los comandos en Bash y prepare Git, Make, Python y `venv` con la [guía de entorno para Linux](../../modules/01_entorno/README.md#linux-nativo-con-debian-o-ubuntu). En Windows, use la terminal de Debian/Ubuntu en WSL2; en macOS, use Terminal.
+
 ```bash
 ./scripts/setup_python.sh --apply
 make test
@@ -167,7 +169,7 @@ Estos endpoints los proporciona FastAPI mediante la configuración actual de la 
 
 ## Ejecución en contenedores y límites actuales
 
-El [Containerfile](Containerfile) empaqueta la misma API con Uvicorn y escucha en el puerto 8000. Desde la raíz del repositorio, elija una ruta:
+El [Containerfile](Containerfile) empaqueta la misma API con Uvicorn y escucha en el puerto 8000. Prepare el motor con la [guía de instalación por sistema operativo](../../modules/01_entorno/README.md). En Linux, Podman funciona directamente; Docker Engine requiere que su servicio esté activo y que su usuario tenga acceso. Si usa Docker con `sudo`, anteponga `sudo` a ambos comandos Docker siguientes. Desde la raíz del repositorio, elija una ruta:
 
 ```bash
 # Docker
