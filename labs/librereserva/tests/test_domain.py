@@ -6,6 +6,7 @@ from labs.librereserva.app.domain import (
     Intervalo,
     IntervaloInvalido,
     IntervaloOcupado,
+    ReservaNoEncontrada,
 )
 
 
@@ -45,6 +46,40 @@ class AgendaTest(unittest.TestCase):
         agenda.crear("A-101", intervalo)
         agenda.crear("B-202", intervalo)
         self.assertEqual(2, len(agenda.listar()))
+
+    def test_borra_una_reserva_por_id(self) -> None:
+        inicio = datetime(2026, 8, 10, 8, tzinfo=UTC)
+        agenda = Agenda()
+        primera = agenda.crear(
+            "A-101", Intervalo(inicio, inicio + timedelta(hours=1))
+        )
+        segunda = agenda.crear(
+            "B-202", Intervalo(inicio, inicio + timedelta(hours=1))
+        )
+
+        agenda.borrar(primera.id)
+
+        self.assertEqual((segunda,), agenda.listar())
+
+    def test_informa_si_la_reserva_que_se_borra_no_existe(self) -> None:
+        agenda = Agenda()
+
+        with self.assertRaisesRegex(
+            ReservaNoEncontrada, "No existe una reserva con id 99"
+        ):
+            agenda.borrar(99)
+
+    def test_no_reutiliza_ids_despues_de_borrar(self) -> None:
+        inicio = datetime(2026, 8, 10, 8, tzinfo=UTC)
+        intervalo = Intervalo(inicio, inicio + timedelta(hours=1))
+        agenda = Agenda()
+        primera = agenda.crear("A-101", intervalo)
+        agenda.crear("B-202", intervalo)
+
+        agenda.borrar(primera.id)
+        tercera = agenda.crear("C-303", intervalo)
+
+        self.assertEqual(3, tercera.id)
 
 
 if __name__ == "__main__":

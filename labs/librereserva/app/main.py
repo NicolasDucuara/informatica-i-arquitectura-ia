@@ -2,10 +2,16 @@
 
 from datetime import datetime
 
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, Response, status
 from pydantic import BaseModel, ConfigDict
 
-from .domain import Agenda, Intervalo, IntervaloInvalido, IntervaloOcupado
+from .domain import (
+    Agenda,
+    Intervalo,
+    IntervaloInvalido,
+    IntervaloOcupado,
+    ReservaNoEncontrada,
+)
 
 app = FastAPI(title="LibreReserva", version="0.1.0")
 agenda = Agenda()
@@ -66,3 +72,15 @@ def crear_reserva(entrada: ReservaEntrada) -> ReservaSalida:
         inicio=reserva.intervalo.inicio,
         fin=reserva.intervalo.fin,
     )
+
+
+@app.delete(
+    "/reservas/{reserva_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def borrar_reserva(reserva_id: int) -> Response:
+    try:
+        agenda.borrar(reserva_id)
+    except ReservaNoEncontrada as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

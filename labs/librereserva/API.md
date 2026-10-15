@@ -1,6 +1,6 @@
 # API de LibreReserva
 
-LibreReserva permite crear y consultar reservas de recursos institucionales. La API local, versión `0.1.0`, ofrece un servicio de reservas y un servicio de salud. Las reservas se almacenan en la memoria del proceso y se pierden al reiniciarlo.
+LibreReserva permite crear, consultar y borrar reservas de recursos institucionales. La API local, versión `0.1.0`, ofrece un servicio de reservas y un servicio de salud. Las reservas se almacenan en la memoria del proceso y se pierden al reiniciarlo.
 
 Esta guía describe la implementación de [app/main.py](app/main.py) y las reglas de [app/domain.py](app/domain.py). La plantilla Lambda de los laboratorios AWS contiene una implementación independiente con un contrato diferente.
 
@@ -14,8 +14,10 @@ flowchart TB
     api --> contrato["Documentación y contrato"]
     reservas --> crear["POST /reservas · crear"]
     reservas --> consultar["GET /reservas · listar"]
+    reservas --> borrar["DELETE /reservas/{id} · borrar"]
     crear --> dominio["Dominio Python · Intervalo, Reserva y Agenda"]
     consultar --> dominio
+    borrar --> dominio
     dominio --> memoria["Reservas en memoria del proceso"]
     salud --> viva["GET /salud/viva"]
     salud --> lista["GET /salud/lista"]
@@ -46,13 +48,14 @@ La URL base local es `http://127.0.0.1:8000`. Los ejemplos siguientes usan esa d
 |---|---|---|---|---|
 | Reservas | POST | `/reservas` | Crear una reserva | `201 Created` y reserva creada |
 | Reservas | GET | `/reservas` | Listar todas las reservas del proceso | `200 OK` y arreglo JSON |
+| Reservas | DELETE | `/reservas/{id}` | Borrar una reserva por identificador | `204 No Content` |
 | Salud | GET | `/salud/viva` | Comprobar que la aplicación responde | `200 OK` y estado `viva` |
 | Salud | GET | `/salud/lista` | Consultar la señal actual de disponibilidad | `200 OK` y estado `lista` |
 | Documentación | GET | `/docs` | Explorar y probar la API con Swagger UI | Página HTML |
 | Documentación | GET | `/redoc` | Consultar la referencia con ReDoc | Página HTML |
 | Contrato | GET | `/openapi.json` | Obtener el esquema OpenAPI | Documento JSON |
 
-La API actual no requiere autenticación. No ofrece edición, cancelación, consulta por identificador, administración de recursos ni filtros de búsqueda.
+La API actual no requiere autenticación. No ofrece edición, consulta por identificador, administración de recursos ni filtros de búsqueda.
 
 ## Servicio de reservas
 
@@ -127,6 +130,20 @@ Respuesta `200 OK` después de crear la reserva anterior:
 
 Si no hay reservas, devuelve `[]`.
 
+### Borrar una reserva
+
+`DELETE /reservas/{id}` elimina la reserva indicada y responde `204 No Content` sin cuerpo.
+
+```bash
+curl -i -X DELETE http://127.0.0.1:8000/reservas/1
+```
+
+Si el identificador no existe, responde `404 Not Found`:
+
+```json
+{"detail":"No existe una reserva con id 99"}
+```
+
 ## Servicio de salud
 
 ### Comprobar vida
@@ -186,7 +203,7 @@ podman run --rm -p 127.0.0.1:8000:8000 localhost/librereserva:0.1.0
 
 Cada proceso conserva una agenda independiente. Recrear el contenedor elimina sus reservas; ejecutar varias réplicas no comparte los datos ni garantiza la ausencia de solapamientos entre réplicas. La comprobación y creación tampoco tienen protección explícita frente a solicitudes concurrentes dentro de un proceso.
 
-PostgreSQL y RabbitMQ están definidos en el [Compose del módulo 6](../../modules/06_apis_datos_eventos/compose.yml), pero la API local aún no se conecta a ellos. Persistencia, publicación de eventos, autenticación y cancelación forman parte de la evolución prevista.
+PostgreSQL y RabbitMQ están definidos en el [Compose del módulo 6](../../modules/06_apis_datos_eventos/compose.yml), pero la API local aún no se conecta a ellos. Persistencia, publicación de eventos, autenticación y un ciclo de cancelación auditable forman parte de la evolución prevista. El borrado actual retira definitivamente la reserva de la memoria del proceso.
 
 ## Comprobación práctica
 
@@ -195,6 +212,8 @@ PostgreSQL y RabbitMQ están definidos en el [Compose del módulo 6](../../modul
 3. Repita el mismo POST y compruebe `409`.
 4. Envíe un intervalo con `fin` anterior a `inicio` y compruebe `422`.
 5. Liste las reservas y compruebe que la primera sigue presente.
-6. Reinicie el proceso o recree el contenedor y compruebe que la lista vuelve a estar vacía.
+6. Borre la reserva, compruebe `204` y verifique que ya no aparece en la lista.
+7. Repita el borrado y compruebe `404`.
+8. Reinicie el proceso o recree el contenedor y compruebe que la lista vuelve a estar vacía.
 
 Las pruebas automatizadas del dominio se ejecutan con `make test`. Las pruebas HTTP y de propiedades están en `modules/07_pruebas` y se incluyen en `make test-all` cuando el entorno de desarrollo está instalado.

@@ -32,9 +32,11 @@ curl -i -X POST http://127.0.0.1:8000/reservas \
   -d '{"recurso":"A-101","inicio":"2026-08-10T08:00:00Z","fin":"2026-08-10T09:00:00Z"}'
 
 curl -fsS http://127.0.0.1:8000/reservas
+
+curl -i -X DELETE http://127.0.0.1:8000/reservas/1
 ```
 
-El segundo POST con el mismo intervalo debe responder `409`. Un intervalo invertido debe responder `422`.
+El segundo POST con el mismo intervalo debe responder `409`. Un intervalo invertido debe responder `422`. Borrar una reserva inexistente debe responder `404`.
 
 ## Evolución esperada
 
