@@ -1,7 +1,7 @@
-# Sesión 10 — Arquitectura robusta y calidad medible
+# Sesión 10 — Persistencia en archivos con múltiples instancias
 
 **Fecha:** 27 de octubre de 2026, encuentro reprogramado de 6:00–10:00 p. m.
-**Resultado:** comprobar el comportamiento de LibreReserva detrás de un balanceador y definir qué significa robustez mediante escenarios medibles, una arquitectura objetivo y decisiones versionadas.
+**Resultado:** ejecutar dos instancias detrás de un balanceador, persistir reservas en un Parquet compartido y comprobar los efectos de las escrituras concurrentes con y sin bloqueo local.
 
 ## Relación con AWS Academy
 
@@ -13,10 +13,10 @@ El módulo 9 de Cloud Foundations aporta el marco de arquitectura en la nube. Su
 |---|---|
 | 6:00–6:30 | comprobar la imagen y la API en una instancia |
 | 6:30–7:15 | ejecutar dos instancias detrás de Caddy y observar la distribución |
-| 7:15–7:50 | relacionar agendas independientes con durabilidad y consistencia |
-| 8:00–8:45 | formular escenarios medibles |
-| 8:45–9:30 | arquitectura actual, arquitectura objetivo y ADR |
-| 9:30–10:00 | evidencia, pull request y preparación de PostgreSQL |
+| 7:15–7:50 | persistir reservas en un archivo Parquet compartido |
+| 8:00–8:45 | provocar escrituras concurrentes y observar actualizaciones perdidas |
+| 8:45–9:30 | repetir con bloqueo de archivo y escritura atómica |
+| 9:30–10:00 | comparar resultados, documentar límites y organizar la evidencia |
 
 ## Práctica de balanceo local
 
@@ -84,29 +84,31 @@ done
 
 El resultado puede alternar entre una lista con la reserva y `[]`. Caddy distribuye las solicitudes, pero `api_a` y `api_b` tienen objetos `Agenda` diferentes. La regla de no solapamiento tampoco se protege entre procesos.
 
-Registre como evidencia los logs de ambas instancias, las respuestas observadas y una explicación del resultado. Al finalizar, retire únicamente los contenedores de este ensayo:
+Detenga este primer ensayo antes de reutilizar el puerto 8080:
 
 ```bash
 docker compose -p librereserva-s10 \
   -f aws-learner-lab/sesiones/10_calidad/compose-balanceo.yml down
 ```
 
+## Práctica de persistencia en Parquet
+
+Continúe con el [laboratorio de persistencia compartida](LABORATORIO_PARQUET.md). El ejercicio conserva las dos instancias y Caddy, pero reemplaza la memoria de cada proceso por un archivo Parquet montado en ambas APIs.
+
+La primera ejecución no coordina el ciclo leer, validar y escribir. La segunda usa un bloqueo `flock` y reemplazo atómico para mostrar qué mejora y qué limitaciones permanecen. La sesión se limita a archivos Parquet; la persistencia en base de datos corresponde a la sesión siguiente.
+
 ## Taller
 
-1. Dibuje la arquitectura actual: cliente, API en contenedor y agenda en memoria.
-2. Añada al diagrama actual el balanceador y las dos agendas independientes observadas.
-3. Dibuje la arquitectura objetivo: cliente, balanceador, API reemplazable, PostgreSQL, CI, logs y respaldo.
-4. Formule exactamente cuatro escenarios:
-   - datos conservados después de reiniciar la API;
-   - una sola confirmación ante solicitudes concurrentes incompatibles;
-   - recuperación después de una caída de PostgreSQL;
-   - diagnóstico de una solicitud fallida mediante logs.
-5. Cada escenario contiene fuente, estímulo, entorno, artefacto, respuesta, unidad y umbral.
-6. Escriba dos ADR: conservar el monolito modular y usar PostgreSQL como almacenamiento durable.
-7. Entregue los documentos mediante una rama corta y un pull request.
+1. Dibuje la arquitectura inicial: cliente, balanceador, dos API y dos agendas en memoria.
+2. Dibuje el experimento: cliente, balanceador, dos API y un archivo Parquet compartido.
+3. Ejecute dos escrituras incompatibles sin coordinación y registre las respuestas.
+4. Identifique el ciclo crítico leer, validar y escribir, y explique la condición de carrera.
+5. Repita la prueba con `flock` y escritura atómica.
+6. Compare consistencia, costo de escritura, recuperación y posibilidad de ejecutar réplicas en otros hosts.
+7. Entregue los resultados mediante una rama corta y un pull request.
 
 ## Validación
 
-Los diagramas deben distinguir el estado actual del objetivo. El balanceador no cuenta como solución de persistencia ni como prueba de alta disponibilidad. Los ADR deben incluir contexto, alternativas, decisión y consecuencias. Una expresión como “alta disponibilidad” sin condición ni medida no cuenta como escenario.
+Los diagramas deben distinguir memoria por instancia y archivo compartido. El balanceador no cuenta como solución de persistencia. El bloqueo de archivo solo se acepta como mitigación del experimento en un host; no prueba integridad distribuida ni alta disponibilidad.
 
-**Evidencia:** distribución observada en los logs, inconsistencia entre agendas, cuatro escenarios, dos diagramas, dos ADR y pull request revisado.
+**Evidencia:** distribución observada, inconsistencia entre agendas, prueba concurrente sin bloqueo, prueba con bloqueo, análisis de Parquet, dos diagramas y pull request revisado.

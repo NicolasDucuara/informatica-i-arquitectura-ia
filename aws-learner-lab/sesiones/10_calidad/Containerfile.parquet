@@ -1,0 +1,17 @@
+FROM docker.io/library/python:3.13-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /app
+COPY labs/librereserva/requirements-container.txt /tmp/requirements-container.txt
+RUN pip install --no-cache-dir \
+      -r /tmp/requirements-container.txt \
+      "pyarrow>=18,<30"
+
+COPY aws-learner-lab/sesiones/10_calidad/parquet_api.py ./parquet_api.py
+RUN mkdir -p /datos && chown 10001:10001 /datos
+
+USER 10001:10001
+EXPOSE 8000
+CMD ["python", "-m", "uvicorn", "parquet_api:app", "--host", "0.0.0.0", "--port", "8000"]

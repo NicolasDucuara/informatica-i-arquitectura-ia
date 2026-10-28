@@ -1,0 +1,43 @@
+services:
+  api_a:
+    build:
+      context: ../../..
+      dockerfile: aws-learner-lab/sesiones/10_calidad/Containerfile.parquet
+    image: localhost/librereserva-parquet:0.1.0
+    environment:
+      INSTANCE_NAME: api_a
+      PARQUET_FILE: /datos/reservas.parquet
+      PARQUET_LOCK_MODE: ${PARQUET_LOCK_MODE:-none}
+      WRITE_DELAY_MS: "700"
+    expose:
+      - "8000"
+    volumes:
+      - reservas_parquet:/datos
+
+  api_b:
+    build:
+      context: ../../..
+      dockerfile: aws-learner-lab/sesiones/10_calidad/Containerfile.parquet
+    image: localhost/librereserva-parquet:0.1.0
+    environment:
+      INSTANCE_NAME: api_b
+      PARQUET_FILE: /datos/reservas.parquet
+      PARQUET_LOCK_MODE: ${PARQUET_LOCK_MODE:-none}
+      WRITE_DELAY_MS: "700"
+    expose:
+      - "8000"
+    volumes:
+      - reservas_parquet:/datos
+
+  balanceador:
+    image: docker.io/library/caddy:2-alpine
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - ./Caddyfile.balanceo:/etc/caddy/Caddyfile:ro
+    depends_on:
+      - api_a
+      - api_b
+
+volumes:
+  reservas_parquet:
