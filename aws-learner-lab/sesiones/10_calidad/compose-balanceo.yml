@@ -1,0 +1,20 @@
+services:
+  api_a:
+    image: localhost/librereserva:0.1.0
+    expose:
+      - "8000"
+
+  api_b:
+    image: localhost/librereserva:0.1.0
+    expose:
+      - "8000"
+
+  balanceador:
+    image: docker.io/library/caddy:2-alpine
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - ./Caddyfile.balanceo:/etc/caddy/Caddyfile:ro
+    depends_on:
+      - api_a
+      - api_b
