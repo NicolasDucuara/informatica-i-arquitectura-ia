@@ -28,7 +28,7 @@ Si `plantuml` no está disponible, consulte [la instalación oficial](https://pl
 
 1. Actualice `contexto.puml` con actores y sistemas reales.
 2. Cree una vista de contenedores que muestre tecnología y responsabilidad.
-3. Escriba `docs/adr/0001-estilo-inicial.md` con contexto, alternativas, decisión, consecuencias y evidencia.
+3. Escriba un ADR para conservar el monolito modular y otro para adoptar PostgreSQL como almacenamiento durable. Incluya contexto, alternativas, decisión, consecuencias y evidencia.
 4. Use UML solo para una interacción o estructura que necesite detalle adicional.
 
 ## Validación

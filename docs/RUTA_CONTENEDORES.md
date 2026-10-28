@@ -1,51 +1,77 @@
-# Contenedores y despliegue: ruta por sesiones
+# LibreReserva robusta: ruta acumulativa por sesiones
 
-Esta ruta distribuye los temas de la presentación CyberColombia de contenedores, versión 9, sin convertir la sesión 9 en un curso completo de infraestructura. Conserva las fechas y los temas de la agenda oficial. Los módulos son materiales de consulta, no sesiones adicionales.
+Esta ruta parte de lo que se alcanzó el 14 de octubre: construir una imagen Docker, ejecutar LibreReserva en un contenedor y probar el despliegue local. Las semanas 10–16 evolucionan esa misma aplicación. No se abre una ruta paralela con otra API, otro modelo de datos u otra plataforma.
 
-## Recorrido y alcance
-
-| Sesión | Pregunta que orienta la clase | Práctica mínima | Continuación o ampliación |
-|---:|---|---|---|
-| 9 · 14 oct. | ¿Cómo ejecuto la misma aplicación en otro equipo? | Git, `.venv`, elección de un motor, imagen, contenedor, `/docs`, reinicio y PR | Sin Compose, bases de datos, colas, Kubernetes ni despliegue AWS obligatorio |
-| 10 · 21 oct. | ¿Cómo sé si la aplicación cumple lo esperado? | Escenario de calidad y medición de la API ya conocida | Sin instalar plataformas nuevas |
-| 11 · 28 oct. | ¿Dónde deben vivir las reglas y los adaptadores? | Agenda en memoria, dominio y puerto de persistencia | Preparar la integración, no desplegar varios servicios |
-| 12 · 4 nov. | ¿Cuándo conviene separar una tarea? | YAML, Compose y una cola: publicar, recibir y repetir un mensaje | Elegir RabbitMQ local o SQS, no realizar ambos talleres |
-| 13 · 11 nov. | ¿Cómo sobreviven los datos y cómo se publica un evento? | PostgreSQL y volumen, transacción y análisis de doble escritura | Integración progresiva y outbox como incremento del proyecto |
-| 14 · 18 nov. | ¿Cómo pruebo y entrego una versión identificable? | Pruebas, CI con construcción de imagen, Deployment, Service, acceso y recuperación | Elegir Kubernetes local o extensión ECR; no añadir TLS ni telemetría completa |
-| 15 · 25 nov. | ¿Qué necesita mejorar nuestro proyecto? | Un incremento de cuatro horas elegido y aprobado por equipo | Escalado/rollback, configuración/secretos/volumen, ensayo de proxy TLS o telemetría: elegir uno |
-| 16 · 2 dic. | ¿Otra persona puede reproducir y explicar el resultado? | Demo, caso de fallo, trazabilidad y limpieza | Sin introducir tecnologías nuevas |
+## Arquitectura de trabajo
 
 ```mermaid
 flowchart LR
-  A["S9: una API en un contenedor"] --> B["S12: una cola y un fallo"]
-  B --> C["S13: datos que sobreviven"]
-  C --> D["S14: pruebas y entrega"]
-  D --> E["S15: una ampliación elegida"]
-  E --> F["S16: demostrar y limpiar"]
+  C[Cliente HTTP] --> B[Caddy]
+  B --> A1[API A]
+  B --> A2[API B]
+  A1 --> P[(PostgreSQL con volumen)]
+  A2 --> P
+  CI[Pruebas y CI] --> A1
+  CI --> A2
+  A1 --> L[Logs y señales de salud]
+  A2 --> L
+  P --> B[Respaldo y restauración]
 ```
 
-En la presentación V9, use las diapositivas 3–21 para la sesión 9. Las 22–28 apoyan las sesiones 12–13. Las 29–33 sirven como lectura de despliegue para el proyecto. Las 35–38 y 41 apoyan la sesión 14. Reserve las 39–40 y 42 para las ampliaciones o la defensa de decisiones. Las portadas y separadores no son contenido adicional evaluable. No es necesario proyectar toda la presentación en una clase.
+El objetivo no es declarar la arquitectura robusta, sino demostrar garantías: datos durables, integridad concurrente, repetición segura, entrega trazable, diagnóstico y recuperación.
 
-## Material que se puede ejecutar y material por desarrollar
+## Recorrido obligatorio
 
-| Capacidad | Estado de la base del curso | Material |
+| Sesión | Pregunta que orienta la clase | Incremento obligatorio | Evidencia |
+|---:|---|---|---|
+| 9 · 14 oct. | ¿Puedo ejecutar la misma aplicación en un contenedor? | Imagen, contenedor, API local y reinicio | Construcción, endpoints y pérdida de estado demostrada |
+| 10 · 27 oct. | ¿Qué ocurre cuando dos instancias comparten un archivo? | Caddy, dos API, Parquet compartido y bloqueo local | Carrera observada, mitigación y límites documentados |
+| 11 · 28 oct. | ¿Cómo sobreviven los datos sin violar las reglas? | Puerto de repositorio, PostgreSQL, migraciones y transacción | Reinicio con datos y prueba concurrente |
+| 12 · 4 nov. | ¿Cómo responde la API ante repeticiones y dependencias caídas? | Idempotencia, errores, vida y disponibilidad real | Repetición sin duplicado y recuperación de PostgreSQL |
+| 13 · 11 nov. | ¿Cómo relaciono un cambio con pruebas y una imagen segura? | Pruebas, CI, etiqueta de commit y configuración externa | Pipeline, imagen trazable y revisión de secretos |
+| 14 · 18 nov. | ¿Cómo diagnostico y recupero el servicio? | Logs, correlación, medición, respaldo y restauración | Caso de fallo, runbook y restauración verificada |
+| 15 · 25 nov. | ¿Puede otro entorno reproducir todo el sistema? | Integración desde clon limpio | Versión candidata y bitácora de cuatro horas |
+| 16 · 2 dic. | ¿Puede el equipo demostrar y defender las garantías? | Demostración completa | Caso feliz, fallo, recuperación y ADR |
+
+```mermaid
+flowchart LR
+  S9[Docker local] --> S10[Balanceo y Parquet]
+  S10 --> S11[Persistencia e integridad]
+  S11 --> S12[Idempotencia y recuperación]
+  S12 --> S13[Pruebas y CI]
+  S13 --> S14[Operación y respaldo]
+  S14 --> S15[Integración limpia]
+  S15 --> S16[Defensa]
+```
+
+## Alcance técnico fijo
+
+- Una API: LibreReserva con FastAPI.
+- Un estilo: monolito modular.
+- Un motor de contenedores por equipo: Docker o Podman con comandos equivalentes.
+- Un balanceador local: Caddy para distribuir solicitudes entre dos instancias.
+- Un almacén durable: PostgreSQL.
+- Un descriptor local: Compose.
+- Una forja y un flujo CI: la ya utilizada por el repositorio.
+- Una estrategia de operación: logs estructurados, salud real, respaldo y restauración.
+
+No forman parte de la ruta evaluable: RabbitMQ, SQS, Lambda, una segunda API serverless, Kubernetes, Forgejo adicional ni una pila completa de telemetría.
+
+## Estado del material
+
+| Capacidad | Estado inicial | Resultado esperado |
 |---|---|---|
-| API con agenda en RAM, `.venv`, Docker/Podman | Implementado | [Práctica de sesión 9](../modules/01_entorno/PRACTICA_CONTENEDORES.md) |
-| Sintaxis y significado de YAML | Guía con ejemplos reales | [YAML para el laboratorio](YAML_PARA_LABORATORIOS.md) |
-| PostgreSQL/RabbitMQ y volúmenes | Configuración ejecutable, puertos solo en loopback | [Laboratorio de datos y mensajes](../modules/06_apis_datos_eventos/LABORATORIO.md) |
-| Productor, cola y recepción de un mensaje | Demo independiente con API HTTP de administración | [Laboratorio, etapa sesión 12](../modules/06_apis_datos_eventos/LABORATORIO.md#sesión-12-un-mensaje-y-un-reintento) |
-| API conectada a PostgreSQL y RabbitMQ | Ejercicio de implementación; no incluido en la API base | [Incrementos de integración](../modules/06_apis_datos_eventos/LABORATORIO.md#sesión-13-persistencia-y-transacciones) |
-| CI con pruebas, imagen y archivo descargable | Flujo definido; requiere ejecutar Actions en una forja | [Flujo CI](../.github/workflows/validate.yml) |
-| Registro ECR | Extensión manual opcional | [Sesión 14](../aws-learner-lab/sesiones/14_pruebas_entrega/README.md) |
-| Kubernetes local, acceso y recuperación | Manifiesto y taller | [Módulo 8](../modules/08_entrega_plataforma/README.md) |
-| Escalado, actualización y vuelta atrás | Taller opcional; no resuelve los datos compartidos | [Operación](../modules/08_entrega_plataforma/OPERACION.md) |
-| ConfigMap, Secret y volumen | Demo separada de la API | [Operación](../modules/08_entrega_plataforma/OPERACION.md) |
-| Proxy TLS y ambientes | Ensayo local, no configuración apta para producción real | [Despliegue y ambientes](../modules/08_entrega_plataforma/DESPLIEGUE.md) |
-| Logs y diagnóstico mínimo | Taller ligero sin instalar backends | [Observabilidad](../modules/09_observabilidad/README.md) |
-| Métricas/trazas centralizadas | Ampliación guiada y demo externa | [Observabilidad](../modules/09_observabilidad/README.md) |
+| API Docker con agenda en RAM | Implementado | Se conserva como línea base de la sesión 9 |
+| Parquet compartido | Experimento de sesión 10 | Evidencia de carreras y límites del bloqueo local; no es el almacén final |
+| PostgreSQL con volumen | Configuración disponible | Se integra a la API mediante puerto y adaptador |
+| Migraciones | Por implementar | Esquema reproducible y versionado |
+| Exclusión concurrente | Por implementar | Dos reservas incompatibles no se confirman a la vez |
+| Idempotencia | Por implementar | Una repetición no crea un segundo efecto |
+| Salud de disponibilidad | Respuesta fija | Comprueba realmente PostgreSQL |
+| CI e imagen | Flujo base disponible | Ejecuta pruebas y relaciona imagen con commit |
+| Logs y correlación | Por implementar | Permiten seguir una solicitud y diagnosticar un fallo |
+| Respaldo y restauración | Por documentar | Restauración comprobada en un volumen limpio |
 
 ## Control de carga
 
-Las instalaciones se preparan antes de la sesión que las necesita. No se exige aprender dos motores, dos brokers ni dos plataformas para acreditar el mismo resultado. Cada entrega conserva un caso feliz, un fallo explicado y una decisión. Las extensiones deben sustituir parte del taller del equipo, no sumarse a todas las actividades obligatorias.
-
-Las cuatro horas de sesión 15 incluyen validación y limpieza. Si una ampliación no se practicó o no fue anunciada por el docente, no se convierte en requisito de la defensa final. La sesión 9 no requiere subir imágenes a un registro ni crear recursos AWS.
+Cada sesión modifica la misma rama de trabajo y termina con un pull request pequeño. No se instala una plataforma nueva para reemplazar una garantía que todavía falta en la aplicación. La jornada de la semana 15 integra y corrige; no añade funcionalidades ni infraestructura. La sesión 16 no permite cambios de arquitectura: demuestra lo construido y registra la deuda restante.

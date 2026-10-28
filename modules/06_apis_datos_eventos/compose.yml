@@ -16,18 +16,5 @@ services:
       timeout: 3s
       retries: 10
 
-  rabbitmq:
-    image: docker.io/library/rabbitmq:4-management-alpine
-    container_name: librereserva-rabbitmq
-    environment:
-      RABBITMQ_DEFAULT_USER: curso
-      RABBITMQ_DEFAULT_PASS: solo-laboratorio
-    ports:
-      - "127.0.0.1:5672:5672"
-      - "127.0.0.1:15672:15672"
-    volumes:
-      - reservas_rabbit:/var/lib/rabbitmq
-
 volumes:
   reservas_pg:
-  reservas_rabbit:

@@ -2,7 +2,7 @@
 
 ## Resultado
 
-Ejecutar LibreReserva con un entorno virtual y con un contenedor, comprobar la API y explicar qué se pierde al reiniciar. Se usa un solo motor. PostgreSQL, RabbitMQ, Compose y Kubernetes se estudian después.
+Ejecutar LibreReserva con un entorno virtual y con un contenedor, comprobar la API y explicar qué se pierde al reiniciar. Se usa un solo motor. PostgreSQL y Compose se incorporan en la sesión 11 para resolver la pérdida de estado observada aquí.
 
 ## Python y contenedores
 
@@ -57,7 +57,7 @@ motor=(podman)
 "${motor[@]}" images
 ```
 
-Una imagen es la plantilla. El contenedor es la instancia creada desde esa plantilla. El registro permite almacenar y descargar imágenes; hoy solo descargamos la base y conservamos nuestra imagen localmente. La publicación en ECR es opcional en sesión 14.
+Una imagen es la plantilla. El contenedor es la instancia creada desde esa plantilla. El registro permite almacenar y descargar imágenes; en esta sesión solo descargamos la base y conservamos nuestra imagen localmente. La ruta evaluable no requiere publicar la imagen en un registro remoto.
 
 ### 3. Crear y arrancar por separado
 

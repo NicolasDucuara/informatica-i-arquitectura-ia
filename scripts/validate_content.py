@@ -18,6 +18,39 @@ CORE_MODULES = (
     "11_ia", "12_proyecto",
 )
 
+TEACHING_GUIDES = {
+    "aws-learner-lab/sesiones/10_calidad/README.md": (
+        "Persistencia en archivos", "Parquet", "bloqueo",
+    ),
+    "aws-learner-lab/sesiones/11_hexagonal/README.md": (
+        "Persistencia e integridad", "PostgreSQL", "prueba concurrente",
+    ),
+    "aws-learner-lab/sesiones/12_distribuidos/README.md": (
+        "API confiable", "idempotencia", "/salud/lista",
+    ),
+    "aws-learner-lab/sesiones/13_api_eventos/README.md": (
+        "Entrega segura y trazable", "flujo CI", "usuario no privilegiado",
+    ),
+    "aws-learner-lab/sesiones/14_pruebas_entrega/README.md": (
+        "Operación y recuperación", "respaldo", "restauración",
+    ),
+    "aws-learner-lab/sesiones/15_proyecto/README.md": (
+        "Jornada autónoma de integración", "clon limpio", "versión candidata",
+    ),
+    "aws-learner-lab/sesiones/16_cierre/README.md": (
+        "Demostración de robustez", "fallo", "recuperación",
+    ),
+}
+
+ROUTE_FORBIDDEN = (
+    "s11-dynamodb.yaml",
+    "s12-messaging.yaml",
+    "s13-serverless-api.yaml",
+    "s14-ecr.yaml",
+    "kind create cluster",
+    "rabbitmq:4",
+)
+
 
 def validate_markdown_links() -> None:
     failures: list[str] = []
@@ -77,8 +110,43 @@ def validate_notebooks() -> None:
     print(f"Notebooks válidos y sin salidas: {len(notebooks)} ({code_cells} celdas)")
 
 
+def validate_teaching_route() -> None:
+    failures: list[str] = []
+    for relative, required in TEACHING_GUIDES.items():
+        path = ROOT / relative
+        content = path.read_text(encoding="utf-8")
+        missing = [phrase for phrase in required if phrase not in content]
+        if missing:
+            failures.append(f"{relative}: faltan {', '.join(missing)}")
+        present = [phrase for phrase in ROUTE_FORBIDDEN if phrase in content]
+        if present:
+            failures.append(f"{relative}: conserva instrucciones fuera de ruta: {', '.join(present)}")
+
+    compose = (ROOT / "modules/06_apis_datos_eventos/compose.yml").read_text(
+        encoding="utf-8"
+    )
+    if "  postgres:" not in compose:
+        failures.append("compose.yml: falta el servicio PostgreSQL")
+    if "rabbitmq" in compose.lower():
+        failures.append("compose.yml: RabbitMQ no pertenece a la ruta evaluable")
+
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    for phrase in (
+        "Dos recorridos que no comparten numeración",
+        "Progreso en AWS Academy Cloud Foundations",
+        "Ruta acumulativa del segundo bloque",
+    ):
+        if phrase not in readme:
+            failures.append(f"README.md: falta '{phrase}'")
+
+    if failures:
+        raise SystemExit("Ruta docente desalineada:\n" + "\n".join(failures))
+    print("Ruta docente alineada: sesiones 10–16 y PostgreSQL acumulativo.")
+
+
 if __name__ == "__main__":
     validate_markdown_links()
     validate_modules()
     validate_notebooks()
+    validate_teaching_route()
     print("Contenido y enlaces locales válidos.")

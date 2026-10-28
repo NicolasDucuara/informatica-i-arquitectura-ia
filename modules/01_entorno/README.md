@@ -4,7 +4,7 @@
 
 Preparar una estación verificable, explicar qué es una decisión arquitectónica y registrar la primera evidencia reproducible.
 
-La [práctica breve de sesión 9](PRACTICA_CONTENEDORES.md) compara `.venv` y contenedor, explica la elección Docker/Podman y recorre el ciclo de vida de LibreReserva. La [ruta por sesiones](../../docs/RUTA_CONTENEDORES.md) distribuye Compose, datos, Kubernetes y operación para después; no son requisitos de esta primera clase.
+La [práctica breve de sesión 9](PRACTICA_CONTENEDORES.md) compara `.venv` y contenedor, explica la elección Docker/Podman y recorre el ciclo de vida de LibreReserva. La [ruta por sesiones](../../docs/RUTA_CONTENEDORES.md) incorpora después PostgreSQL, confiabilidad, CI y recuperación; no son requisitos de esta primera clase.
 
 ## Dónde encaja el entorno de desarrollo
 
@@ -76,7 +76,7 @@ podman run --rm docker.io/library/hello-world
 
 Podman se ejecuta directamente sobre Linux. Use su usuario habitual; esta ruta no requiere `podman machine init` ni `podman machine start`. Después, desde la raíz del repositorio, continúe con `./scripts/setup_python.sh --apply` y `make test`.
 
-El conjunto mínimo anterior basta para sesión 9. Antes de sesión 12, instale `podman-compose` y compruebe `podman compose version`; el instalador completo `install_base.sh` ya incluye ese proveedor. En macOS, si solo instaló `podman`, prepare también `brew install podman-compose` antes del taller de servicios.
+El conjunto mínimo anterior basta para sesión 9. Antes de sesión 11, compruebe `docker compose version` o `podman compose version`; Podman puede necesitar un proveedor como `podman-compose`. En macOS, si eligió Podman, prepare ese proveedor antes del taller de PostgreSQL.
 
 Para otras distribuciones, siga la [instalación oficial de Podman](https://podman.io/docs/installation). `install_base.sh` automatiza Debian/Ubuntu y macOS; para Fedora, Arch y otras distribuciones, instale también Git, Make, Python, soporte de entornos virtuales y curl con el gestor correspondiente.
 

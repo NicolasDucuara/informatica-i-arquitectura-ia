@@ -1,76 +1,57 @@
-# Módulo 9. Observabilidad, confiabilidad y costo
+# Módulo 9. Operación y recuperación
 
 ## Resultado
 
-Correlacionar registros, métricas y trazas; formular SLI/SLO; usar presupuesto de error para decidir.
-
-Este módulo es apoyo transversal. En sesión 14 basta consultar estado, salud y logs. La pila completa se reserva a una ampliación de sesión 15 con herramientas preparadas antes; no es una instalación adicional obligatoria para toda la clase.
+Diagnosticar solicitudes, distinguir vida de disponibilidad, medir el comportamiento observado y restaurar PostgreSQL mediante un procedimiento reproducible.
 
 ## Instalación paso a paso
 
-### Diagnóstico mínimo sin instalar servicios adicionales
+Use el ambiente acumulativo de LibreReserva: Docker o Podman, Compose, la imagen de la API y PostgreSQL. No se instala una plataforma adicional. Levante el sistema con los comandos documentados por el equipo y compruebe `/salud/viva` y `/salud/lista` antes de inducir fallos.
 
-Con la API ya ejecutándose, en otra terminal:
+## Señales mínimas
+
+LibreReserva debe registrar, sin datos sensibles:
+
+- fecha y hora;
+- identificador de solicitud;
+- método y ruta normalizada;
+- estado HTTP;
+- duración;
+- tipo de error controlado.
+
+`/salud/viva` comprueba el proceso HTTP. `/salud/lista` comprueba realmente PostgreSQL dentro de un tiempo máximo. Ninguna de las dos respuestas debe exponer la cadena de conexión.
+
+## Diagnóstico
+
+Con la API en ejecución, genere una solicitud correcta, un conflicto y una indisponibilidad de PostgreSQL. Relacione cada respuesta con sus logs mediante el identificador de solicitud.
 
 ```bash
 curl -sS -o /dev/null -w 'HTTP=%{http_code} tiempo=%{time_total}s\n' \
   http://127.0.0.1:8000/salud/viva
-# Contenedor de la práctica, si sigue activo:
-podman logs --tail=20 librereserva-s9
-# Alternativa Docker: docker logs --tail=20 librereserva-s9
-# En Kubernetes, alternativa:
-kubectl logs -l app=librereserva --all-containers=true --tail=20
+docker logs --tail=50 librereserva
 ```
 
-Use solo el comando que corresponda a su ruta. Una medición aislada no es un p95 ni un sistema de métricas. Registre hora, estado HTTP, duración y el log relacionado; reinicie una instancia y observe la recuperación. `/salud/lista` devuelve un estado fijo en la API base y no verifica PostgreSQL/RabbitMQ.
+Use `podman logs` cuando corresponda. Registre las condiciones de cualquier medición: equipo, revisión, número de solicitudes y concurrencia. Reporte al menos p50, p95 y tasa de error; una observación aislada no es un percentil.
 
-**Evidencia ligera:** solicitud, log y diagnóstico del fallo. No atribuya correlación por `trace_id` a logs que aún no están instrumentados.
+## Respaldo y restauración
 
-### Ruta ligera: notebook
+1. Cree varias reservas identificables.
+2. Genere un respaldo de PostgreSQL.
+3. Compruebe que el archivo no está vacío.
+4. Detenga el ambiente.
+5. Identifique y elimine únicamente el volumen del laboratorio.
+6. Cree un volumen limpio.
+7. Restaure el respaldo.
+8. Levante la API y verifique las reservas.
 
-```bash
-./scripts/setup_python.sh --apply
-.venv/bin/jupyter lab modules/09_observabilidad
-```
-
-Abra `slo_error_budget.ipynb` y ejecute todas las celdas.
-
-### Ruta completa: demostración OpenTelemetry
-
-1. Instale Git, Podman y Compose mediante el módulo 1.
-2. Verifique al menos 6 GiB de memoria libre; si no, use la ruta ligera.
-3. Clone la [demostración oficial de OpenTelemetry](https://opentelemetry.io/docs/demo/).
-4. Registre la etiqueta o confirmación usada; no dependa silenciosamente de `main`.
-5. Revise imágenes, puertos y recursos antes de iniciar.
-6. Siga el perfil Docker/Compose del proyecto sustituyendo Docker por Podman cuando sea compatible.
-
-Esta demostración externa tiene su propia arquitectura; no es un backend integrado automáticamente con LibreReserva. Antes de usar el comando de instrumentación siguiente, prepare un receptor OTLP accesible en `localhost:4317` según su configuración y compruebe el destino. Arrancar la API sin un receptor no produce una traza visible en Jaeger/Grafana por sí solo.
-
-Para instrumentar la API Python:
-
-```bash
-./scripts/setup_python.sh --apply
-.venv/bin/python -m pip install opentelemetry-distro opentelemetry-exporter-otlp
-.venv/bin/opentelemetry-bootstrap -a install
-
-export OTEL_SERVICE_NAME=librereserva-api
-export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
-export OTEL_EXPORTER_OTLP_PROTOCOL=grpc
-.venv/bin/opentelemetry-instrument \
-  .venv/bin/uvicorn labs.librereserva.app.main:app --port 8000
-```
-
-Prometheus, Grafana, Jaeger y el Collector son software libre o de código abierto, pero cada imagen conserva su licencia. Fije versión y digest antes de una entrega evaluada.
-
-## Ejercicio
-
-Formule una pregunta antes de crear el panel. Genere tráfico correcto, conflicto 409 y demora artificial. Relacione una métrica RED, una traza lenta y un registro con `trace_id`. Compare la tasa de consumo del presupuesto antes y después del fallo.
+El runbook debe incluir detección, diagnóstico, respaldo disponible, recuperación, validación y reversión segura.
 
 ## Validación
 
-- 409 no se clasifica automáticamente como error del servidor.
-- Ninguna etiqueta contiene usuario, token o URL sin normalizar.
-- El p95 se calcula bajo condiciones declaradas.
-- El panel conduce a una acción y no es solamente decorativo.
+- Un conflicto de negocio no se clasifica como error interno.
+- Los logs no contienen credenciales, cuerpos completos ni datos personales.
+- Vida y disponibilidad cambian de manera coherente durante la caída.
+- La medición declara condiciones y muestra datos reproducibles.
+- La restauración se comprueba mediante la API.
 
-**Evidencia:** SLI/SLO, consultas, captura de traza, panel versionado y diagnóstico.
+**Evidencia:** logs correlacionados, medición, respaldo, restauración y runbook.

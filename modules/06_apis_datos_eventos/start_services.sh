@@ -17,7 +17,7 @@ done
 }
 module_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-printf 'Plan: iniciar PostgreSQL y RabbitMQ definidos en %s/compose.yml\n' "$module_dir"
+printf 'Plan: iniciar PostgreSQL definido en %s/compose.yml\n' "$module_dir"
 printf 'Motor: %s. Comando: %s compose -f %s/compose.yml up -d\n' "$motor" "$motor" "$module_dir"
 [[ "$mode" == apply ]] || {
   printf 'Use %s --apply después de revisar imágenes, puertos y credenciales.\n' "$0"

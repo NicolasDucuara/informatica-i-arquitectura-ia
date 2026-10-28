@@ -4,11 +4,15 @@
 
 - Integrantes:
 - Fecha y duración real:
-- Región:
-- Pila o recursos:
-- Commit o solicitud de cambio:
+- Revisión base:
+- Commit o pull request:
+- Identificador de imagen:
 
-No incluya número completo de cuenta, credenciales, tokens, secretos ni datos personales.
+No incluya credenciales, tokens, secretos ni datos personales.
+
+## Resultado de la sesión
+
+Garantía trabajada, condición de aceptación y relación con los escenarios de calidad.
 
 ## Decisión
 
@@ -16,24 +20,41 @@ Problema, opciones consideradas, decisión, consecuencia y condición que obliga
 
 ## Ejecución reproducible
 
-Comandos ejecutados y cambios al código. Sustituya cualquier valor sensible por `[OCULTO]`.
+Comandos ejecutados, variables requeridas sin valores sensibles, migraciones aplicadas y cambios al código.
 
 ## Validación
 
-Caso feliz, caso de fallo, medición obtenida y explicación. Incluya salida textual; una captura sola no es evidencia suficiente.
+- Caso feliz:
+- Caso de conflicto o concurrencia:
+- Caso de repetición:
+- Caso de fallo:
+- Recuperación:
+- Medición:
+- Pruebas automatizadas:
 
-## Consumo
+Incluya salidas textuales relevantes. Una captura aislada no sustituye resultados reproducibles.
 
-- Tiempo de Learner Lab:
-- Recursos creados:
-- Estimación o indicador de consumo disponible:
+## Datos y operación
 
-## Limpieza
+- Estado de PostgreSQL:
+- Volumen utilizado:
+- Respaldo:
+- Restauración comprobada:
+- Logs relacionados:
 
-- [ ] pila eliminada;
-- [ ] recursos con datos vaciados o eliminados;
-- [ ] consola de cada servicio revisada;
-- [ ] credenciales temporales retiradas del entorno local;
-- [ ] `git status` revisado para evitar secretos.
+## Seguridad de la entrega
+
+- [ ] no existen secretos en Git;
+- [ ] la imagen no contiene archivos de credenciales;
+- [ ] la configuración se obtiene del ambiente;
+- [ ] los logs no exponen datos sensibles;
+- [ ] el proceso del contenedor no requiere privilegios.
+
+## Cierre
+
+- [ ] contenedores del laboratorio detenidos;
+- [ ] `git status` revisado;
+- [ ] deuda y riesgos registrados;
+- [ ] recursos AWS oficiales eliminados, únicamente si se utilizaron.
 
 Resultado de la comprobación final:

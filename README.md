@@ -1,6 +1,6 @@
 # Informática I: arquitectura de software moderna e IA
 
-Curso práctico de la Especialización en Ingeniería de Software. El repositorio acompaña el libro **Arquitectura de Software Moderna y desarrollo asistido por inteligencia artificial** y convierte sus temas en rutas reproducibles de estudio, laboratorio y evaluación.
+Curso práctico de la Especialización en Ingeniería de Software. El repositorio acompaña el libro **Arquitectura de Software Moderna, incluyendo aspectos de IA para el desarrollo** y convierte sus temas en rutas reproducibles de estudio, laboratorio y evaluación.
 
 Preparado por los profesores:
 
@@ -67,73 +67,74 @@ El miércoles 7 de octubre corresponde a la Semana Universitaria y no se program
 
 | Semana | Fecha | Profesor | Tema y práctica asociada |
 |---:|---|---|---|
-| 9 | 14 oct. | Esteban Hernández | Entorno reproducible, Git colaborativo y contenedores: preparación y verificación de la estación de trabajo |
-| 10 | 21 oct. | Esteban Hernández · virtual | Atributos de calidad: escenarios medibles y funciones de aptitud |
-| 11 | 28 oct. | Esteban Hernández | Atributos de calidad aplicados a modularidad, dominio y núcleo hexagonal |
-| 12 | 4 nov. | Esteban Hernández | Sistemas distribuidos: decidir antes de distribuir |
-| 13 | 11 nov. | Esteban Hernández | API, datos y eventos: persistencia, idempotencia y patrón outbox |
-| 14 | 18 nov. | Esteban Hernández | Implementación y pruebas; entrega y plataforma con OCI, CI y Kubernetes local |
-| 15 | 25 nov. | Trabajo de proyecto | Jornada de trabajo autónomo; no hay encuentro sincrónico |
-| 16 | 2 dic. | Esteban Hernández | Despliegue, demostración y cierre del proyecto |
+| 9 | 14 oct. | Esteban Hernández | Docker: construcción de imagen, ejecución de LibreReserva y pruebas de despliegue local |
+| 10 | 27 oct. | Esteban Hernández · virtual | Balanceo y persistencia en archivos: dos instancias, Parquet compartido, concurrencia y bloqueo local |
+| 11 | 28 oct. | Esteban Hernández | Persistencia e integridad: puerto de repositorio, PostgreSQL, migraciones y concurrencia |
+| 12 | 4 nov. | Esteban Hernández | API confiable: idempotencia, errores, disponibilidad y recuperación de dependencias |
+| 13 | 11 nov. | Esteban Hernández | Entrega segura y trazable: pruebas, CI, imagen OCI, configuración y secretos |
+| 14 | 18 nov. | Esteban Hernández | Operación y recuperación: logs, salud real, medición, respaldo y restauración |
+| 15 | 25 nov. | Trabajo de proyecto | Integración desde un clon limpio; jornada autónoma sin temas nuevos |
+| 16 | 2 dic. | Esteban Hernández | Demostración de robustez, defensa de decisiones y cierre |
 
 La descripción institucional completa se encuentra en la [agenda del segundo semestre de 2026](docs/AGENDA_16_SEMANAS.md). Si existe una diferencia entre una guía de laboratorio y la agenda, prevalecen el syllabus y las orientaciones del profesor titular.
 
-### Contenedores y despliegue sin sobrecargar una clase
+### Ruta acumulativa del segundo bloque
 
-La [ruta por sesiones](docs/RUTA_CONTENEDORES.md) relaciona la presentación CyberColombia con los archivos del repositorio. En sesión 9 se ejecuta una API con `.venv` y un contenedor. YAML/Compose y colas se introducen en sesión 12; persistencia/transacciones en sesión 13; CI y Kubernetes básico en sesión 14. Las ampliaciones de ambientes, TLS, configuración, escalado y telemetría se eligen por equipo en sesión 15. El cierre no añade tecnologías.
+La [ruta por sesiones](docs/RUTA_CONTENEDORES.md) parte del despliegue Docker alcanzado el 14 de octubre y evoluciona una sola aplicación. LibreReserva continúa como monolito modular en contenedor, PostgreSQL conserva los datos y Compose describe el ambiente local. Las semanas siguientes añaden garantías verificables: integridad, idempotencia, pruebas, trazabilidad, diagnóstico y recuperación.
 
-La ruta distingue configuración ejecutable, demostraciones independientes e integración por desarrollar. Levantar PostgreSQL/RabbitMQ no conecta automáticamente la API, y añadir réplicas no comparte su agenda en memoria.
+No se incorporan colas, una segunda implementación serverless ni Kubernetes en la ruta evaluable. Esas tecnologías no corrigen la limitación inmediata de la API: las reservas todavía viven en la memoria del proceso y se pierden al reemplazar el contenedor.
 
-## Correspondencia entre la agenda y los materiales
+## Dos recorridos que no comparten numeración
 
-| Semana | Material principal | Evidencia esperada | Software de apoyo |
+### Progreso en AWS Academy Cloud Foundations
+
+| Módulos AWS Academy | Estado en el curso | Uso posterior |
+|---|---|---|
+| 1–8: nube, economía, infraestructura, seguridad, redes, cómputo, almacenamiento y bases de datos | Desarrollados | Fundamento conceptual para el proyecto |
+| 9: arquitectura en la nube | Programado con la semana 10 | Revisar decisiones y atributos de calidad |
+| 10: monitoreo y escalado automático | Programado con la semana 14 | Relacionar salud, medición, balanceo y recuperación |
+
+Los números de AWS Academy identifican unidades de ese curso y no semanas de Informática I ni carpetas `modules/`.
+
+### Materiales del repositorio para Informática I
+
+Las rutas internas se presentan por propósito. El número histórico de la carpeta no indica la semana ni el módulo AWS.
+
+| Semana | Propósito | Material principal | Evidencia acumulativa |
 |---:|---|---|---|
-| 1 | [Modelo de software frente a arquitectura de software](modules/00_Modelos-Arquitecturas/README.md) | Modelo de software frente a arquitectura de software; evolución de las arquitecturas; cliente-servidor, multicapas y arquitectura web |
-| 2 | [UML y su papel en el desarrollo de software](modules/00_Modelos-Arquitecturas/README.md) | UML y su papel en el desarrollo de software; introducción al repositorio |
-| 3 | [Paradigma de programación orientada a objetos](modules/00_Modelos-Arquitecturas/README.md) | Paradigma de programación orientada a objetos; principios de POO y relación entre UML y POO |
-| 4 | [Lenguajes modernos orientados a objetos: Python](modules/01_Lenguajes_Modernos/README.md) | Python POO |
-| 5 | [Lenguajes modernos orientados a objetos: Python](modules/01_Lenguajes_Modernos/README.md) | Python POO |
-| 6 | [Lenguajes modernos orientados a objetos: Java](modules/01_Lenguajes_Modernos/README.md) | Java POO |
-| 7 | [Lenguajes modernos orientados a objetos: Java](modules/01_Lenguajes_Modernos/README.md) | Java POO |
-| 8 | [Metapatrón MVC y manejo de comunicaciones](modules/01_Lenguajes_Modernos/README.md) | Aplicacion Web con Python-FastApi y java-SpringBoots |
-| 9 | [Entorno reproducible](modules/01_entorno/README.md), [un contenedor](modules/01_entorno/PRACTICA_CONTENEDORES.md) y Git | `.venv`, API en contenedor, reinicio y PR | Git, Python, Make, un motor Docker/Podman |
-| 10 | [Atributos de calidad](modules/02_calidad/README.md) | Escenarios con unidad, umbral y condiciones | Jupyter, Python |
-| 11 | [Atributos de calidad](modules/02_calidad/README.md) y [modularidad y dominio](modules/04_modularidad/README.md) | Función de aptitud, límites y núcleo hexagonal | Python, FastAPI |
-| 12 | [Sistemas distribuidos](modules/05_distribucion/README.md) y [mensajes](modules/06_apis_datos_eventos/LABORATORIO.md) | Mensaje repetido y decisión síncrona/cola | Compose y RabbitMQ, o SQS |
-| 13 | [Datos y transacciones](modules/06_apis_datos_eventos/LABORATORIO.md) | Persistencia, conflicto y análisis de doble escritura | PostgreSQL local o corte vertical AWS |
-| 14 | [Implementación y pruebas](modules/07_pruebas/README.md) y [entrega y plataforma](modules/08_entrega_plataforma/README.md) | Suite de pruebas, imagen OCI y despliegue local | pytest, Podman, Forgejo, kind |
-| 15 | [Proyecto integrador](modules/12_proyecto/README.md) y [ampliación elegida](aws-learner-lab/sesiones/15_proyecto/README.md) | Un incremento funcional u operativo de cuatro horas | Solo herramientas de la ruta elegida |
-| 16 | [Entrega y plataforma](modules/08_entrega_plataforma/README.md) y [proyecto integrador](modules/12_proyecto/README.md) | Despliegue reproducible, demostración y paquete final | Podman, Kubernetes local |
+| 1–3 | Fundamentos, UML y POO | [Modelos y arquitecturas](modules/00_Modelos-Arquitecturas/README.md) | Conceptos, diagramas y relación UML–POO |
+| 4–7 | Lenguajes modernos y MVC | [Python y Java](modules/01_Lenguajes_Modernos/README.md) | Aplicaciones y manejo de comunicaciones |
+| 8 | Evaluación del primer bloque | Material definido por el profesor titular | Evidencia del primer bloque |
+| 9 | ENV · ejecución reproducible | [Entorno](modules/01_entorno/README.md) y [práctica Docker](modules/01_entorno/PRACTICA_CONTENEDORES.md) | Imagen, contenedor, API local y pérdida de estado demostrada |
+| 10 | ARC · persistencia en archivos | [Sesión 10](aws-learner-lab/sesiones/10_calidad/README.md) y [laboratorio Parquet](aws-learner-lab/sesiones/10_calidad/LABORATORIO_PARQUET.md) | Balanceo, archivo compartido, carrera de escritura y bloqueo local |
+| 11 | DAT · persistencia e integridad | [Modularidad](modules/04_modularidad/README.md) y [laboratorio PostgreSQL](modules/06_apis_datos_eventos/LABORATORIO.md) | Puerto, adaptador, migración, reinicio y concurrencia |
+| 12 | RES · comportamiento confiable | [Laboratorio PostgreSQL](modules/06_apis_datos_eventos/LABORATORIO.md) | Idempotencia, salud real y recuperación de la dependencia |
+| 13 | TST · entrega trazable | [Pruebas](modules/07_pruebas/README.md) y [flujo CI](.github/workflows/validate.yml) | Pruebas, imagen asociada al commit y configuración segura |
+| 14 | OPS · operación y recuperación | [Observabilidad](modules/09_observabilidad/README.md) | Logs, medición, respaldo, restauración y runbook |
+| 15 | INT · integración | [Proyecto integrador](modules/12_proyecto/README.md) | Versión candidata reproducida desde un clon limpio |
+| 16 | CIE · defensa | [Guía de cierre](aws-learner-lab/sesiones/16_cierre/README.md) | Caso feliz, fallo, recuperación y decisiones defendidas |
 
-### Material complementario y transversal
-
-Estos módulos permanecen disponibles como apoyo. No crean sesiones adicionales ni reemplazan los temas de la agenda:
-
-- [C4, UML y ADR](modules/03_c4_uml_adr/README.md): complementa UML y documenta decisiones arquitectónicas.
-- [Observabilidad](modules/09_observabilidad/README.md): aporta evidencia operativa al despliegue y al proyecto.
-- [Seguridad](modules/10_seguridad/README.md): integra amenazas, dependencias y cadena de suministro en API y entrega.
-- [IA para desarrollo](modules/11_ia/README.md): apoya análisis, código, pruebas y documentación bajo revisión humana y trazabilidad.
-
-El alcance evaluable de estos materiales será indicado por los profesores. Su uso debe reforzar los resultados del syllabus y no ampliar informalmente la carga del curso.
+Los demás módulos se conservan como biblioteca del repositorio, pero no forman parte del recorrido evaluable de las semanas restantes.
 
 ## Integración con AWS Academy
 
-Las sesiones 9 a 16, orientadas por el Dr. Esteban Hernández, utilizarán **AWS Academy Learner Lab** para desarrollar progresivamente LibreReserva cuando el acceso institucional, los servicios y las cuotas hayan sido verificados. Esta práctica corresponde exclusivamente a ese bloque. AWS no sustituye la ruta reproducible con software libre.
+AWS Academy Cloud Foundations y el proyecto de Informática I son recorridos paralelos. Los módulos 1–8 de Cloud Foundations ya proporcionan el vocabulario de infraestructura y servicios; el módulo 9 acompaña la revisión arquitectónica de la semana 10 y el módulo 10 acompaña operación y recuperación en la semana 14. La numeración AWS no determina la estructura del repositorio.
+
+AWS Academy publica consignas, evidencias y evaluaciones. LibreReserva se construye y valida con Docker, Compose y PostgreSQL local para que toda persona pueda reproducirla sin depender de permisos temporales. Learner Lab se utiliza únicamente cuando la actividad oficial de Cloud Foundations lo requiera; no se crea una arquitectura AWS alternativa para cada semana.
 
 El paquete [LibreReserva en AWS Academy Learner Lab](aws-learner-lab/README.md) incluye:
 
 - [preparación obligatoria antes de la sesión 9](aws-learner-lab/PREPARACION_ANTES_SESION_9.md);
 - [guía docente para crear la clase y publicar cada actividad](aws-learner-lab/GUIA_DOCENTE_AWS_ACADEMY.md);
-- ocho guías, una por semana, con taller, evidencia, contingencia y limpieza;
-- plantillas CloudFormation efímeras y scripts conservadores de comprobación y despliegue.
+- siete guías restantes, con taller, evidencia y criterios acumulativos;
+- una definición común de terminado para el proyecto.
 
-- AWS Academy Cloud Foundations, o conocimientos equivalentes, se considera preparación previa.
+- Los módulos 1–8 de AWS Academy Cloud Foundations se registran como trabajo ya desarrollado.
+- Los módulos 9 y 10 se relacionan con las semanas 10 y 14, respectivamente.
 - No se pretende completar dentro de Informática I un curso Associate de AWS Academy; Cloud Architecting, Cloud Developing y Cloud Operations tienen una duración aproximada de 40 horas cada uno.
-- Learner Lab se emplea para asignaciones propias, despliegue controlado, observación de consumo y evidencia del proyecto.
-- Cada práctica dependiente de AWS debe tener una alternativa local con las herramientas del repositorio.
+- Learner Lab no sustituye el ambiente local acumulativo del proyecto.
 - Los estudiantes deben eliminar los recursos al finalizar el laboratorio y no registrar credenciales ni secretos.
 - La disponibilidad real de servicios se valida en el portal de AWS Academy antes de publicar cada ejercicio.
-- Las plantillas no crean roles IAM ni almacenan credenciales; usan únicamente capacidades previamente habilitadas por Learner Lab.
 
 ## Inicio rápido
 
@@ -173,7 +174,7 @@ Esta guía detallada cubre todos los escenarios de trabajo con Git y GitHub:
 - **E5**: Manejo de push rechazado
 - **E6**: Resolución de conflictos
 
-**Comandos esenciales para la sesión 9:**
+**Comandos esenciales para los incrementos del segundo bloque:**
 ```bash
 # Configurar remotos después de crear fork
 git remote rename origin upstream

@@ -25,7 +25,7 @@ Abra `escenarios_calidad.ipynb`, seleccione el kernel `.venv` y ejecute **Restar
 
 ## Ejercicio
 
-Escriba tres escenarios para LibreReserva. Implemente una función automática para uno y diseñe un experimento para otro. Use el notebook para comparar dos alternativas sin ocultar la variabilidad.
+Escriba cuatro escenarios para LibreReserva: durabilidad después de reiniciar la API, integridad ante concurrencia, recuperación de PostgreSQL y diagnóstico de una solicitud fallida. Diseñe la arquitectura actual y la arquitectura objetivo; automatice al menos una medida sin ocultar la variabilidad.
 
 ## Validación
 

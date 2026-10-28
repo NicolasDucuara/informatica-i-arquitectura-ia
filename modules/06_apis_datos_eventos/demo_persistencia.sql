@@ -1,4 +1,4 @@
--- Tablas exclusivas del laboratorio; la API base no las utiliza.
+-- Ejemplo de integridad para diseñar la migración real de LibreReserva.
 CREATE EXTENSION IF NOT EXISTS btree_gist;
 
 CREATE TABLE IF NOT EXISTS demo_reservas (
@@ -11,12 +11,4 @@ CREATE TABLE IF NOT EXISTS demo_reservas (
         recurso WITH =,
         tstzrange(inicio, fin, '[)') WITH &&
     )
-);
-
-CREATE TABLE IF NOT EXISTS demo_outbox (
-    evento_id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    reserva_id bigint NOT NULL REFERENCES demo_reservas(id),
-    evento jsonb NOT NULL,
-    creado_en timestamptz NOT NULL DEFAULT now(),
-    publicado_en timestamptz
 );

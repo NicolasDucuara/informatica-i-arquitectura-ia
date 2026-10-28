@@ -1,56 +1,38 @@
-# Sesión 15 — Jornada autónoma de proyecto
+# Sesión 15 — Jornada autónoma de integración
 
 **Fecha:** 25 de noviembre de 2026, cuatro horas de trabajo autónomo, sin encuentro sincrónico.
-**Resultado:** integrar un incremento demostrable de LibreReserva con herramientas preparadas y sin trasladar deuda de limpieza a la sesión final.
-
-## Elección de una ampliación
-
-El equipo y el docente eligen **una** capacidad, con criterio de aceptación que quepa en cuatro horas:
-
-- Un incremento funcional de [persistencia o eventos](../../../modules/06_apis_datos_eventos/LABORATORIO.md).
-- [Escalado/actualización/rollback o demo de configuración/almacenamiento](../../../modules/08_entrega_plataforma/OPERACION.md), con las limitaciones de la API en RAM explícitas.
-- [Ensayo local de proxy TLS y decisión de ambientes](../../../modules/08_entrega_plataforma/DESPLIEGUE.md).
-- [Diagnóstico ligero o telemetría](../../../modules/09_observabilidad/README.md), con la infraestructura preparada antes de la jornada.
-
-Las alternativas son excluyentes como carga mínima. No exija TLS, varias plataformas, Forgejo, bases de datos integradas y observabilidad completa al mismo equipo en esta jornada. El docente anuncia las alternativas al cerrar sesión 14 y comprueba sus prerrequisitos; los ejemplos opcionales se revisan antes, no se instalan por primera vez durante la defensa final.
-
-## Montaje docente en AWS Academy
-
-Publique `S15 — LibreReserva — jornada autónoma` al menos 48 horas antes. Mantenga Learner Lab disponible durante la franja acordada y adjunte este archivo, la evidencia y la rúbrica. Habilite un canal institucional de consultas y anuncie dos puntos de control asincrónicos. No añada una plantilla nueva: cada equipo reutiliza únicamente servicios ya probados en sesiones 9–14.
+**Resultado:** producir una versión candidata de LibreReserva desde un clon limpio, sin introducir tecnologías ni funcionalidades nuevas.
 
 ## Plan de cuatro horas
 
-| Tiempo | Actividad y evidencia |
+| Tiempo | Actividad |
 |---:|---|
-| 0:00–0:20 | seleccionar una historia, criterio de aceptación y riesgo |
-| 0:20–1:00 | diseñar cambio y actualizar ADR/diagrama |
-| 1:00–2:30 | implementar en rama corta con pruebas |
-| 2:30–3:15 | integrar, desplegar localmente o en Learner Lab y ejecutar caso de fallo |
-| 3:15–3:40 | revisar seguridad, logs, consumo y reproducibilidad |
-| 3:40–4:00 | entregar bitácora, limpiar AWS y preparar demo final |
+| 0:00–0:30 | clonar la revisión, revisar variables y comprobar prerrequisitos |
+| 0:30–1:15 | ejecutar pruebas y levantar PostgreSQL |
+| 1:15–2:00 | aplicar migraciones, construir imagen y levantar la API |
+| 2:00–2:45 | ejecutar caso feliz, concurrencia e idempotencia |
+| 2:45–3:25 | provocar caída de PostgreSQL y recuperar el servicio |
+| 3:25–3:45 | restaurar el respaldo en un volumen limpio |
+| 3:45–4:00 | registrar resultados, defectos y versión candidata |
 
-## Ejercicio propuesto
+## Lista obligatoria
 
-Cada equipo selecciona una capacidad funcional u operativa de la lista anterior. Un cambio funcional debe relacionar dominio, adaptador, API y pruebas. Un cambio operativo debe demostrar comportamiento anterior/posterior y un procedimiento reproducible de recuperación. En ambos casos se registra lo que permanece pendiente.
+- El repositorio no tiene cambios locales desconocidos al comenzar.
+- Las instrucciones funcionan desde un clon limpio.
+- Todas las pruebas pasan.
+- La imagen se relaciona con un commit.
+- API y PostgreSQL se levantan con comandos documentados.
+- Las migraciones se aplican de manera reproducible.
+- Una reserva sobrevive al reinicio de la API.
+- La prueba concurrente confirma una sola reserva incompatible.
+- La repetición idempotente no duplica efectos.
+- La caída de PostgreSQL cambia la disponibilidad.
+- El servicio se recupera después de iniciar PostgreSQL.
+- El respaldo se restaura en un volumen limpio.
+- Los ADR y el diagrama representan la implementación real.
 
-Si usa AWS:
+## Restricción de alcance
 
-1. inicie una sesión temporal;
-2. despliegue una de las plantillas ya aprobadas con nombre `libre-reserva-s15-equipoXX`;
-3. registre hora de inicio, recursos y consumo;
-4. ejecute caso feliz y caso de fallo;
-5. elimine la pila antes de terminar.
+No se añaden colas, funciones, Kubernetes, otra base de datos, otra forja ni una pila de observabilidad. Si aparece un defecto, se corrige dentro de la arquitectura existente o se registra como deuda con impacto y responsable.
 
-## Validación
-
-```bash
-make check
-make test-all
-git status --short
-aws cloudformation list-stacks --region "$AWS_REGION" \
-  --stack-status-filter CREATE_COMPLETE UPDATE_COMPLETE
-```
-
-**Entrega:** incremento integrado, bitácora de cuatro horas, pruebas, estado del despliegue, ADR, riesgos y confirmación de limpieza. Una lista de actividades sin un incremento ejecutable no satisface la jornada.
-
-**Ruta local:** Podman, PostgreSQL, RabbitMQ y `kind` son suficientes; AWS no es obligatorio si el incremento elegido no lo necesita.
+**Entrega:** versión candidata, bitácora de cuatro horas, pruebas, identificador de imagen, resultados de fallo/recuperación y defectos pendientes.

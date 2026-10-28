@@ -8,9 +8,8 @@
 | Git | |
 | Python | |
 | Motor elegido Docker o Podman y versión | |
-| kubectl / kind | |
-| Herramientas de seguridad | |
-| Ollama y modelo, si aplica | |
+| Compose | |
+| PostgreSQL del laboratorio | |
 | Fecha de verificación | |
 
 ## Desviaciones y decisiones

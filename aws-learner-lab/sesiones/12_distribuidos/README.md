@@ -1,56 +1,45 @@
-# Sesión 12 — Decidir antes de distribuir
+# Sesión 12 — API confiable ante repeticiones y fallos
 
 **Fecha:** 4 de noviembre de 2026, 6:00–10:00 p. m.
-**Resultado:** comparar una notificación dentro del monolito con una cola asíncrona y justificar la distribución mediante evidencia de fallos.
+**Resultado:** hacer que la creación de reservas sea segura ante repeticiones y que la API comunique correctamente la disponibilidad de PostgreSQL.
 
-## Alcance y preparación
+## Alcance
 
-Esta sesión introduce YAML y Compose con la [lectura breve](../../../docs/YAML_PARA_LABORATORIOS.md) y la [etapa de mensajes del laboratorio](../../../modules/06_apis_datos_eventos/LABORATORIO.md#sesión-12-un-mensaje-y-un-reintento). Prepare Compose antes de clase. Elija RabbitMQ local o SQS como taller principal: no exija ambos. PostgreSQL, transacciones e integración de la API se reservan a sesión 13; Kubernetes a sesión 14. No se implementa un sistema completo de notificaciones en esta sesión.
-
-## Montaje docente en AWS Academy
-
-Publique `S12 — LibreReserva — decidir antes de distribuir` con este archivo, `s12-messaging.yaml`, el módulo 5 y la evidencia. Pruebe previamente envío, recepción repetida, visibilidad y movimiento a DLQ. Aclare que SQS ofrece entrega al menos una vez y que la idempotencia pertenece al consumidor.
+Esta sesión continúa sobre la persistencia de la semana 11. No introduce mensajería, colas ni procesos distribuidos adicionales.
 
 ## Secuencia de cuatro horas
 
 | Hora | Tema y acción |
 |---|---|
-| 6:00–6:20 | estado del núcleo modular y pregunta de distribución |
-| 6:20–7:10 | tarea síncrona/asíncrona, productor/cola/consumidor y entrega repetida |
-| 7:10–7:50 | YAML/Compose y RabbitMQ local, o demo SQS si esa es la ruta elegida |
-| 8:00–9:25 | publicar/recibir un mensaje, repetirlo y diseñar cómo evitar un efecto duplicado |
-| 9:25–9:50 | matriz monolito/cola/función y ADR |
-| 9:50–10:00 | purga y eliminación |
+| 6:00–6:20 | verificar migraciones y pruebas de integración |
+| 6:20–7:10 | idempotencia, códigos de error y límites de transacción |
+| 7:10–7:50 | vida, disponibilidad y dependencias |
+| 8:00–9:25 | implementar clave de idempotencia y salud real |
+| 9:25–9:50 | detener PostgreSQL, observar y recuperar |
+| 9:50–10:00 | pull request y actualización del ADR |
 
-## Taller AWS
+## Taller
 
-```bash
-./aws-learner-lab/scripts/stack.sh deploy \
-  libre-reserva-s12-equipoXX \
-  aws-learner-lab/templates/s12-messaging.yaml --apply
+1. Acepte una clave de idempotencia al crear reservas.
+2. Guarde la clave y el resultado en la misma transacción que la reserva.
+3. Para la misma clave y el mismo contenido, devuelva el resultado anterior sin crear otra reserva.
+4. Para la misma clave con contenido diferente, responda conflicto.
+5. Mantenga `/salud/viva` como señal del proceso.
+6. Cambie `/salud/lista` para comprobar realmente PostgreSQL.
+7. Defina respuestas consistentes para validación, conflicto, dependencia no disponible y error inesperado.
+8. Detenga PostgreSQL, compruebe la indisponibilidad y recupere el servicio sin perder datos.
 
-queue_url="$(aws cloudformation describe-stacks \
-  --stack-name libre-reserva-s12-equipoXX --region "$AWS_REGION" \
-  --query 'Stacks[0].Outputs[?OutputKey==`QueueUrl`].OutputValue' --output text)"
-[[ "$queue_url" == https://* ]] || exit 1
+## Matriz mínima
 
-aws sqs send-message --queue-url "$queue_url" --region "$AWS_REGION" \
-  --message-body '{"type":"ReservaCreada","id":"demo-01","recurso":"A-101"}'
-aws sqs receive-message --queue-url "$queue_url" --region "$AWS_REGION" \
-  --wait-time-seconds 10 --visibility-timeout 5 --max-number-of-messages 1
-```
+| Experimento | Resultado |
+|---|---|
+| repetir solicitud con la misma clave y contenido | no existe un segundo efecto |
+| reutilizar la clave con contenido diferente | conflicto |
+| detener PostgreSQL | vida puede responder; disponibilidad debe fallar |
+| iniciar PostgreSQL nuevamente | disponibilidad se recupera y los datos continúan |
 
-No elimine el mensaje recibido; repita la recepción después del tiempo de visibilidad y demuestre el reintento. Construya un consumidor local que guarde identificadores procesados y que produzca un solo efecto aunque reciba el mensaje dos veces. Envíe un mensaje inválido y observe su tratamiento hasta la DLQ.
+## Validación
 
-## Validación y limpieza
+Las pruebas deben distinguir duplicación de conflicto de negocio. Un endpoint de disponibilidad que devuelve un valor fijo no satisface el resultado.
 
-```bash
-aws sqs purge-queue --queue-url "$queue_url" --region "$AWS_REGION"
-./aws-learner-lab/scripts/stack.sh delete libre-reserva-s12-equipoXX --apply
-```
-
-**Evidencia mínima:** dos entregas del mismo mensaje, explicación del efecto duplicado, decisión síncrona/cola y limpieza. Un consumidor implementado y DLQ son ampliaciones de la ruta elegida, no requisitos simultáneos.
-
-**Ruta local:** siga el [laboratorio RabbitMQ](../../../modules/06_apis_datos_eventos/LABORATORIO.md). La API HTTP de administración permite observar publicación y reencolado; no reproduce todas las garantías de un cliente AMQP ni la semántica de SQS.
-
-Al cerrar, recuerde preparar `kind` y `kubectl` antes de sesión 14, sin utilizarlos en el taller de hoy.
+**Evidencia:** migración de idempotencia, pruebas HTTP/integración, matriz ejecutada y logs de caída/recuperación.

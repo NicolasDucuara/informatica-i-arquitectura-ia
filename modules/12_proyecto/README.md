@@ -1,63 +1,61 @@
-# Módulo 12. Proyecto integrador: LibreReserva operable
+# Módulo 12. Proyecto integrador: LibreReserva robusta
 
 ## Resultado
 
-Integrar arquitectura, código, entrega, operación, seguridad e IA responsable en un producto pequeño y defendible.
-
-## Visión de la evolución del proyecto
-
-![Sketch de desarrollo desde Git hasta la entrega de una imagen](../../docs/imagenes/desarrollo-moderno.jpg)
-
-El proyecto relaciona código revisado, pruebas y una versión ejecutable. No exige incorporar todas las herramientas del dibujo a la vez.
-
-![Sketch de réplicas reemplazables y datos separados en servicios cloud](../../docs/imagenes/despliegue-sin-estado-cloud.jpg)
-
-Aunque la ejecución de la aplicación pueda cambiar de instancia, los datos deben conservarse en servicios separados. Cada equipo justifica si conviene una VM, un servicio gestionado o Kubernetes, y cómo conservará los datos al sustituir una instancia. Autoescalado y almacenamiento gestionado no reemplazan pruebas, backups, control de acceso ni límites de costo. Declare si su incremento sigue usando agenda en RAM.
+Entregar una aplicación pequeña, persistente, reproducible, diagnosticable y recuperable, construida mediante incrementos sobre una sola arquitectura.
 
 ## Instalación paso a paso
 
-No existe una instalación adicional única. Prepare únicamente las capacidades elegidas y registre versiones:
+No existe una instalación nueva para el proyecto. Desde un clon limpio se preparan únicamente Docker o Podman, Compose, Python y las variables documentadas; después se ejecutan pruebas, migraciones, PostgreSQL y la imagen de la API siguiendo el README del equipo.
 
-```bash
-./scripts/check_environment.sh
-./scripts/setup_python.sh --apply
-make check
-make test
+## Arquitectura final
+
+```mermaid
+flowchart LR
+  C[Cliente] --> A[FastAPI en contenedor]
+  A --> P[(PostgreSQL con volumen)]
+  CI[Pruebas y CI] --> A
+  A --> L[Logs y salud]
+  P --> R[Respaldo y restauración]
 ```
 
-Después prepare solo la arquitectura y la ampliación aprobadas para el equipo. La [ruta por sesiones](../../docs/RUTA_CONTENEDORES.md) evita convertir esta lista en instalaciones obligatorias simultáneas:
-
-1. Módulo 6: PostgreSQL y RabbitMQ.
-2. Módulo 8: Podman, kind, kubectl y Forgejo.
-3. Módulo 9: OpenTelemetry y backends seleccionados.
-4. Módulo 10: Gitleaks, Syft, Trivy y ZAP.
-5. Módulo 11: Ollama/Continue solo si el experimento local es viable.
+LibreReserva permanece como monolito modular. La API ejecuta las reglas; PostgreSQL conserva datos e integridad. Compose describe el ambiente local. CI verifica la revisión y construye una imagen identificable.
 
 ## Iteraciones
 
-1. **Descubrimiento:** actores, alcance, escenarios, C4 y dos ADR.
-2. **Incremento:** crear y consultar reservas con persistencia y pruebas.
-3. **Entrega segura:** CI, imagen OCI, SBOM y despliegue local.
-4. **Operación:** telemetría, SLO, alerta y fallo controlado.
-5. **IA y cierre:** comparación asistida, deuda, costo, README y defensa.
+1. **Línea base:** Docker local y pérdida de estado demostrada.
+2. **Diseño:** cuatro escenarios, C4 y dos ADR.
+3. **Datos:** puerto, adaptador PostgreSQL, migraciones y concurrencia.
+4. **Confiabilidad:** idempotencia, errores, vida, disponibilidad y recuperación.
+5. **Entrega:** pruebas, CI, imagen por commit y configuración externa.
+6. **Operación:** logs, medición, respaldo, restauración y runbook.
+7. **Integración:** reproducción completa desde un clon limpio.
+8. **Defensa:** caso feliz, fallo, recuperación y deuda reconocida.
 
 ## Definición de terminado
 
-El mínimo común es pruebas, una imagen identificable, despliegue reproducible, una reserva, un caso de fallo y una decisión explicada. Persistencia, mensajería, SBOM y telemetría se exigen según los incrementos practicados y acordados. Cada equipo realiza una ampliación de sesión 15, no todas las iteraciones avanzadas a la vez.
+- Las instrucciones funcionan desde un clon limpio.
+- Las pruebas unitarias, de contrato, integración y HTTP pasan.
+- Las migraciones construyen el esquema desde una base vacía.
+- Una reserva sobrevive al reinicio de la API.
+- Dos solicitudes concurrentes incompatibles confirman una sola reserva.
+- Repetir una solicitud con la misma clave no duplica el efecto.
+- Vida y disponibilidad representan estados diferentes.
+- La imagen se relaciona con un commit y no contiene secretos.
+- Los logs permiten seguir una solicitud sin revelar datos sensibles.
+- Un respaldo se restaura en un volumen limpio.
+- Los diagramas y ADR representan la implementación real.
 
-- Criterios aprobados y revisión de otra persona.
-- Pruebas por riesgo y contrato actualizado.
-- Telemetría suficiente y amenaza examinada.
-- Ningún secreto o dato personal confirmado.
-- Imagen trazable por digest y despliegue reproducible.
-- Asistencia de IA declarada y comprendida.
+## Jornada autónoma
 
-## Validación final
-
-Un evaluador parte de un clon limpio y debe poder crear entorno, ejecutar pruebas, construir imagen, desplegar y crear/consultar una reserva. Además reproduce la ampliación acordada: persistencia, evento, recuperación, proxy o medición. SBOM y trazas centralizadas se exigen solo cuando fueron practicados y anunciados. Cada capacidad no implementada se registra como deuda con riesgo, responsable y fecha; no se presenta como una funcionalidad operativa.
+La semana 15 no añade tecnologías ni funcionalidades. Cada equipo clona su versión candidata en un directorio limpio, ejecuta la definición de terminado, corrige defectos dentro de la arquitectura existente y registra la deuda que no pueda cerrar.
 
 ## Defensa
 
-Quince minutos: problema y decisión; recorrido funcional; fallo inducido y diagnóstico; control de seguridad; resultado de IA; deuda reconocida. Después, cada integrante realiza un cambio pequeño seleccionado al azar.
+Quince minutos por equipo: arquitectura y decisiones; construcción desde revisión identificada; caso feliz; concurrencia e idempotencia; caída y recuperación; logs; respaldo restaurado; deuda. Cada integrante debe poder explicar y modificar el incremento.
 
-**Evidencia:** etiqueta de versión, digest, paquete de evidencias y matriz resultado de aprendizaje–archivo.
+**Evidencia:** etiqueta o commit final, identificador de imagen, paquete de pruebas, migraciones, runbook, ADR y matriz requisito–evidencia.
+
+## Validación
+
+La lista de definición de terminado se ejecuta completa desde un clon limpio. Una capacidad que no pueda reproducirse se registra como deuda y no se presenta como terminada.

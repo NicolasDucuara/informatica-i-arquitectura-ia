@@ -1,6 +1,6 @@
 # Libro de Informática I — 2026
 
-Fuente LaTeX del libro **Arquitectura de Software Moderna y desarrollo asistido por inteligencia artificial**.
+Fuente LaTeX del libro **Arquitectura de Software Moderna, incluyendo aspectos de IA para el desarrollo**.
 
 ## Compilación
 

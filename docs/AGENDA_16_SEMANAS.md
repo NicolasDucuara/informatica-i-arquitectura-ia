@@ -36,26 +36,25 @@ El primer bloque desarrolla los temas definidos por el profesor titular. El segu
 | 7 | 23 sep. | Carlos Montenegro | Metapatrón MVC y manejo de comunicaciones |
 | 8 | 30 sep. | Carlos Montenegro | Evaluación del primer bloque |
 | — | 7 oct. | Semana Universitaria | No se programa una sesión ordinaria |
-| 9 | 14 oct. | Esteban Hernández | Entorno reproducible, Git colaborativo y contenedores: preparación y verificación de la estación de trabajo |
-| 10 | 21 oct. | Esteban Hernández · virtual | Atributos de calidad: escenarios medibles y funciones de aptitud |
-| 11 | 28 oct. | Esteban Hernández | Atributos de calidad aplicados a modularidad, dominio y núcleo hexagonal |
-| 12 | 4 nov. | Esteban Hernández | Sistemas distribuidos: decidir antes de distribuir |
-| 13 | 11 nov. | Esteban Hernández | API, datos y eventos: persistencia, idempotencia y patrón outbox |
-| 14 | 18 nov. | Esteban Hernández | Implementación y pruebas; entrega y plataforma con OCI, CI y Kubernetes local |
-| 15 | 25 nov. | Trabajo de proyecto | Jornada de trabajo de proyecto sin encuentro sincrónico |
-| 16 | 2 dic. | Esteban Hernández | Despliegue, demostración y cierre del proyecto |
+| 9 | 14 oct. | Esteban Hernández | Docker: construcción de imagen, ejecución de LibreReserva y pruebas de despliegue local |
+| 10 | 27 oct. | Esteban Hernández · virtual | Balanceo y persistencia en archivos: dos instancias, Parquet compartido, concurrencia y bloqueo local |
+| 11 | 28 oct. | Esteban Hernández | Persistencia e integridad: puerto de repositorio, PostgreSQL, migraciones y concurrencia |
+| 12 | 4 nov. | Esteban Hernández | API confiable: idempotencia, errores, disponibilidad y recuperación de dependencias |
+| 13 | 11 nov. | Esteban Hernández | Entrega segura y trazable: pruebas, CI, imagen OCI, configuración y secretos |
+| 14 | 18 nov. | Esteban Hernández | Operación y recuperación: logs, salud real, medición, respaldo y restauración |
+| 15 | 25 nov. | Trabajo de proyecto | Integración desde un clon limpio; jornada autónoma sin temas nuevos |
+| 16 | 2 dic. | Esteban Hernández | Demostración de robustez, defensa de decisiones y cierre |
 
 ## Uso de AWS Academy
 
-AWS Academy Learner Lab se utiliza en las semanas 9 a 16 como entorno de las prácticas de LibreReserva del Dr. Esteban Hernández, siempre que la institución, el educador, la clase y los servicios estén habilitados antes del inicio del segundo bloque. La [ruta operativa de las ocho sesiones](../aws-learner-lab/README.md) y la [preparación previa](../aws-learner-lab/PREPARACION_ANTES_SESION_9.md) forman parte del material del curso.
+AWS Academy Cloud Foundations y LibreReserva son recorridos paralelos. Los módulos 1–8 de Cloud Foundations se registran como desarrollados. El módulo 9 acompaña la revisión de arquitectura de la semana 10 y el módulo 10 acompaña operación y recuperación en la semana 14. Los números de AWS Academy no son semanas de Informática I ni números de las carpetas `modules/`.
 
-- Cloud Foundations, o conocimiento equivalente, es preparación previa.
+LibreReserva se construye en un ambiente local reproducible con Docker, Compose y PostgreSQL. AWS Academy publica las consignas y evidencias, y Learner Lab se usa solo para las actividades oficiales que lo requieran. No se implementa una segunda versión de LibreReserva con servicios AWS diferentes.
+
 - No se incorpora un curso Associate completo de AWS Academy dentro de estas 64 horas.
-- Cada laboratorio dependiente de AWS tiene una ruta local de contingencia.
-- Los servicios y cuotas se validan antes de publicar el ejercicio.
-- Cada equipo registra consumo y elimina sus recursos al terminar.
-- Las credenciales nunca se almacenan en el repositorio.
-- La semana 15 se monta como actividad autónoma de cuatro horas en la clase de AWS Academy; no se presenta como encuentro sincrónico.
+- Los servicios y cuotas se validan antes de cualquier actividad oficial de Learner Lab.
+- Cada equipo registra consumo, elimina sus recursos y nunca almacena credenciales en Git.
+- La semana 15 se publica como actividad autónoma de cuatro horas; no se presenta como encuentro sincrónico.
 
 ## Estructura de un encuentro de cuatro horas
 
@@ -71,36 +70,38 @@ AWS Academy Learner Lab se utiliza en las semanas 9 a 16 como entorno de las pr�
 
 Las instalaciones extensas y las lecturas se realizan en las horas de trabajo cooperativo o autónomo. Durante el encuentro se priorizan decisiones, experimentos, construcción y validación.
 
-## Distribución de contenedores y despliegue
+## Ruta acumulativa de LibreReserva
 
-La [ruta por sesiones](RUTA_CONTENEDORES.md) conserva esta agenda y separa los niveles de práctica:
+La [ruta por sesiones](RUTA_CONTENEDORES.md) conserva una sola arquitectura y una sola entrega:
 
-- Sesión 9: `.venv`, elección de un motor, una imagen, una API, reinicio y evidencia Git. AWS es una demostración opcional, no una entrega adicional.
-- Sesión 12: YAML/Compose y cola con un mensaje repetido; escoger RabbitMQ local o SQS.
-- Sesión 13: persistencia y transacción, con PostgreSQL local o la ruta AWS; integración/outbox por incrementos.
-- Sesión 14: pruebas, CI con imagen, Deployment/Service, acceso y recuperación. Registro ECR solo como extensión.
-- Sesión 15: una ampliación funcional u operativa acordada; no todas las capacidades de producción.
-- Sesión 16: demostrar lo ya practicado y limpiar. No instalar servicios nuevos.
+- Sesión 9: imagen Docker, contenedor, API local y pérdida del estado al reiniciar.
+- Sesión 10: balanceador local, dos instancias, Parquet compartido y comparación de escrituras con y sin bloqueo.
+- Sesión 11: PostgreSQL, migraciones, puerto/adaptador y prueba concurrente.
+- Sesión 12: idempotencia, errores, salud real y recuperación de PostgreSQL.
+- Sesión 13: pruebas, CI, imagen trazable y configuración segura.
+- Sesión 14: logs, medición, respaldo, restauración y runbook.
+- Sesión 15: integración desde un clon limpio, sin tecnologías nuevas.
+- Sesión 16: demostración de caso feliz, fallo, recuperación y decisiones.
 
-Los materiales avanzados permanecen como consulta. Una demostración de ConfigMap/PVC o proxy TLS no se considera persistencia ni seguridad productiva ya integrada en LibreReserva.
+Colas, una implementación serverless paralela y Kubernetes no forman parte de la ruta evaluable del segundo bloque.
 
 ## Alcance de la jornada del 25 de noviembre
 
 La jornada de proyecto debe tener una duración esperada de cuatro horas y producir:
 
-- incremento integrado del proyecto;
+- versión candidata integrada desde un clon limpio;
 - bitácora de actividades y tiempo;
 - pruebas ejecutadas;
-- estado del despliegue local o en Learner Lab;
-- consumo y recursos pendientes de limpieza;
+- construcción de la imagen y despliegue local con PostgreSQL;
+- prueba de fallo, recuperación, respaldo y restauración;
 - riesgos, decisiones y dudas para la sesión final.
 
 El canal de acompañamiento y el mecanismo de entrega deben publicarse antes de esa fecha.
 
 ## Evidencia final
 
-Como mínimo, un evaluador debe poder partir de un clon limpio, ejecutar las pruebas, construir el artefacto, desplegar LibreReserva localmente o en AWS Academy Learner Lab, realizar una reserva y relacionar el resultado con una decisión arquitectónica.
+Como mínimo, un evaluador debe poder partir de un clon limpio, ejecutar pruebas, construir la imagen, levantar LibreReserva con PostgreSQL, realizar una reserva, reiniciar la API sin perder datos, comprobar concurrencia e idempotencia, provocar una indisponibilidad y recuperar el servicio.
 
-La evidencia ampliada —observabilidad, SBOM, análisis de seguridad y registro de IA— se exige únicamente cuando haya sido practicada y declarada en los criterios de evaluación. El cierre debe incluir costo consumido y confirmación de eliminación de recursos en AWS.
+La entrega incluye los ADR, logs del caso de fallo, respaldo restaurado y trazabilidad entre commit e imagen. Si se usó Learner Lab para los módulos oficiales de AWS Academy, el cierre incluye además consumo y confirmación de eliminación de recursos.
 
 Última actualización metodológica: 14 de octubre de 2026.
